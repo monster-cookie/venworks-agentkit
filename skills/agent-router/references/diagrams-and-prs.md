@@ -14,7 +14,9 @@ Describe the concrete problem, final behavior, and actual validation using the r
 
 Anchor the description and diagram to the final diff and reviewed base/head. Distinguish unchanged context from added, changed, or removed behavior; rebuild visuals if the implementation changes. Include material compatibility, migration, operational, or unverified-runtime implications. A diagram is an explanation, not evidence that tests passed or a deployment succeeded.
 
-Prepare the text and visuals within the authorized task scope. Publish a PR, comment, or attachment only when the user's instructions authorize that action. Create only ready-for-review PRs, never draft PRs. Diagram preparation alone does not authorize committing, pushing, or publishing.
+For implemented changes, include the [testing handoff](testing-handoff.md) steps and expected results or a direct link to the finished guide. Keep recorded passes/failures separate from instructions and checks that still need to run, and update the handoff when the final diff changes.
+
+Prepare the text and visuals within the task scope. Repository implementation requests include commit, push, and a ready-for-review PR under [Git delivery and definition of done](git-delivery.md), with one delivery owner and explicit task restrictions preserved. Create only ready-for-review PRs, never draft PRs. Standalone diagram preparation or review does not start Git delivery, and the default does not authorize unrelated comments, attachments, or external publication.
 
 ## PR Lens
 

@@ -38,6 +38,7 @@ Before selecting project tools or using an authenticated service, follow [toolin
 - Recheck every instruction against the actual current behavior and test the example or command when a safe, relevant check is available.
 - Run proportionate documentation or format checks and inspect the final diff for internal jargon, broken links, unsupported claims, and accidental implementation detail.
 - Return the changed document paths, validation performed, and any remaining user-facing uncertainty or compatibility gap.
+- Include the [testing handoff](../agent-router/references/testing-handoff.md) with user-facing setup or action steps, observable expected results, recovery or cleanup, and platform checks that were or were not run. For repository-owned documentation changes, follow the [Git delivery procedure](../agent-router/references/git-delivery.md) after integration and required review/testing; the coordinator owns delivery after integration, while a directly invoked documentation specialist without a coordinator owns delivery for its task. Delegated documentation specialists return scoped docs and evidence and do not independently commit, push, or open a PR unless assigned. Create only ready-for-review, non-draft PRs and honor local-only, report-only, unavailable-remote, and unresolved-check limits. A ready PR is not a merge, deployment, release, approval, or tracker completion.
 
 ## Format discipline
 

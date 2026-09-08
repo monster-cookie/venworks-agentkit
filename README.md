@@ -15,6 +15,8 @@ AgentKit gives Codex a set of specialist roles, shared instructions, and reusabl
 - **Thirteen shared instruction sets**, called skills, that explain how the coordinator and specialists should work.
 - **Eight ready-to-use prompts** for new features, bug fixes, reviews, release preparation, documentation, marketing, and resuming unfinished work.
 - **Infrastructure-as-code support** through `tech-ops`, using your project's existing tools to maintain configuration, prepare changes, investigate drift, and verify authorized operations.
+- **Testing instructions with every implemented change**, covering setup, commands or manual steps, expected results, and what was actually checked. The implementing specialist supplies them, and the coordinator checks that the handoff covers the delivered work.
+- **Delivery through a ready-for-review PR**, with a scoped commit and branch push included in the normal definition of done for repository changes. Explicit local-only instructions and read-only assignments retain their limits.
 - **Art and 3D work within feature delivery**, using the skills and tools available in your setup to create assets, keep editable source files, and check exports in the project where possible.
 - **Diagrams for architecture, technical documentation, and PRs**, with Mermaid Markdown for structure and flows and optional [PR Lens](https://github.com/coldteadotai/pr-lens) visuals when available. See the [diagram and PR guidance](skills/agent-router/references/diagrams-and-prs.md).
 - **Optional tooling and credential policies** for shared defaults, repository-specific tools, named service accounts, and scoped operational permissions.
@@ -80,6 +82,18 @@ For infrastructure work, ask the coordinator to use `tech-ops`. For example: "Up
 The prompts are text you copy and paste, not automatically added menu items or slash commands. A copy is also installed in your Codex `prompts` folder.
 
 The workflow asks for reviews that fit the assignment. **Adversarial review—a deeper attempt to find hidden failures—is reserved for major new features, newly introduced frameworks or libraries, or an explicit request.** Routine fixes and documentation changes do not automatically need it. Security review is off by default. You can explicitly request it for any project; ordinary workflow prompts do not start it automatically. AgentKit uses its own local reviewer; it does not automatically launch the separate Codex Security scan product or require Daybreak access. The instructions also ask assistants to preserve useful progress and report unfinished or unverified work honestly.
+
+## Definition of done
+
+When you ask AgentKit to implement a repository change, the normal workflow continues through the applicable reviews, checks, and testing instructions, then commits the scoped changes, pushes the task branch, and creates or updates a **ready-for-review PR**. You do not need to ask separately for each Git step. The coordinator owns delivery after integrating specialist work; directly invoked specialists own it when there is no coordinator. See [Git delivery and definition of done](skills/agent-router/references/git-delivery.md).
+
+Instructions such as "local changes only," "do not commit," or "do not push" override this default. Review-only, research, planning, and release-readiness tasks keep their report scope, and non-Git artifact work does not require a new repository. Delivery does not include merging, deployment, release publication, or marking external work items Done. If a required delivery step is blocked, AgentKit reports what completed and what remains; successful local edits alone do not count as completed Git delivery.
+
+## Testing handoff
+
+Every implemented change includes [testing instructions](skills/agent-router/references/testing-handoff.md) in the final response or a linked guide. The implementer owns the steps, and the coordinator checks coverage after the final fixes. Larger guides can use technical documentation or user documentation specialists; this phase does not require an additional agent.
+
+Expect prerequisites, runnable commands or manual actions, expected results, relevant regression checks, and cleanup when a check changes state. Results show which checks passed, failed, or were not run, with any runtime or platform limits. Small documentation or asset changes receive proportionate proofreading, rendering, or integration steps. Writing instructions does not replace checks the assistant can and should run within the authorized task.
 
 ## Choose tools and service accounts
 
@@ -162,20 +176,30 @@ The included specialists use these settings. The *reasoning* column is the model
 
 | Specialist | Model | Reasoning |
 | --- | --- | --- |
-| Coding | GPT-5.6 Sol | xhigh |
-| Tech ops / infrastructure as code | GPT-5.6 Sol | xhigh |
-| Software architecture | GPT-6 Astra | high |
-| Graphic design and art | GPT-6 Astra | xhigh |
-| 3D modeling | GPT-6 Astra | xhigh |
-| Code review | GPT-6 Astra | high |
-| Adversarial review | GPT-6 Astra | xhigh |
-| Security review (opt-in) | GPT-6 Astra | high |
-| Research | GPT-5.6 Luna | max |
-| Technical documentation | GPT-5.6 Luna | max |
-| User documentation | GPT-6 Astra | high |
-| Marketing documentation | GPT-6 Astra | high |
+| Coding | GPT-5.6 Sol | high |
+| Tech ops / infrastructure as code | GPT-5.6 Sol | high |
+| Software architecture | GPT-6 Astra | medium |
+| Graphic design and art | GPT-6 Astra | low |
+| 3D modeling | GPT-6 Astra | high |
+| Code review | GPT-6 Astra | medium |
+| Adversarial review | GPT-6 Astra | high |
+| Security review (opt-in) | GPT-6 Astra | medium |
+| Research | GPT-5.6 Luna | high |
+| Technical documentation | GPT-5.6 Luna | high |
+| User documentation | GPT-6 Astra | low |
+| Marketing documentation | GPT-6 Astra | low |
 
-Your main assistant keeps the model in your existing Codex settings. The optional example uses GPT-6 Astra with `xhigh` reasoning and GPT-5.6 Sol with `xhigh` as the default for additional assistants. The workflow uses the default service tier and does not enable Fast mode. It limits reasoning to `xhigh`, except for Luna, which may use `max`.
+Your main assistant keeps the model and reasoning in your existing Codex settings. The optional example uses GPT-6 Astra with `low` reasoning and GPT-5.6 Sol with `high` as the default for additional assistants. Updating AgentKit preserves an existing `config.toml`, so changing the example does not change your current main assistant. The workflow uses the default service tier and does not enable Fast mode. It limits reasoning to `xhigh`, except for Luna, which may use `max`.
+
+These are starting defaults, with more effort reserved for tasks that need it. Routine coordination, visual direction, and public-facing writing start at Astra `low`; architecture and normal/security reviews start at `medium`; 3D modeling and adversarial review keep `high` for difficult asset work and deeper failure analysis. Sol remains the implementation model, and Luna remains the focused research and technical-writing model. Increase effort when ambiguity, difficult interactions, or observed results justify it, within the runtime's supported settings and the package's limits. Explicit user model and reasoning choices take precedence.
+
+OpenAI calls `low` **Light** in the app and recommends using the lowest effort that produces the needed result. The official pages consulted do not establish an exact Astra Light = Sol High equivalence. Treat these selections as defaults to evaluate against familiar work, not as a benchmarked quality or savings guarantee. See [OpenAI's reasoning guidance](https://learn.chatgpt.com/docs/models#pick-a-reasoning-effort) and [Astra's supported effort levels](https://developers.openai.com/api/docs/models/gpt-6-astra). Compare completion quality, missed defects, unnecessary findings, time, and usage on representative tasks before increasing defaults across all roles.
+
+### Image generation for graphic design
+
+The graphic-design specialist's Astra setting controls planning, tool use, and review. The model that renders an image is a separate tool setting. OpenAI's September 8, 2026 release adds [**GPT Image 2.5 Flare**](https://developers.openai.com/api/docs/models/gpt-image-2.5-flare) for fast everyday generation and [**GPT Image 2.5 Sunburst**](https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst) for precise editing. These are the preferred choices when an authorized image tool exposes model selection and its endpoint, tool/SDK options, and configured account support the requested model. AgentKit checks current official guidance and available capability evidence; a public model listing alone does not prove account or tool access. See the [release notes](https://developers.openai.com/api/docs/changelog) and [image-generation guide](https://developers.openai.com/api/docs/guides/image-generation).
+
+The graphic-design subagent can use the built-in image-generation tool when that tool is available to it. The interface checked for this update exposes no model selector or backend identity, so AgentKit cannot force or confirm Image 2.5 through that interface. It keeps the available built-in path and reports this limitation when a particular image model is requested. Unsupported or unverified selections are reported without silently substituting a model or claiming a backend ran. Explicit API model selection needs an authorized, configured API workflow; installing AgentKit does not set up that access or update installed wrappers. Existing SVG and other editable vector assets still use the appropriate native tools.
 
 ### Future OpenRouter support
 
@@ -218,15 +242,16 @@ Git commits can also include your email address. Check your Git identity before 
 </details>
 
 <details>
-<summary>Run the installer tests</summary>
+<summary>Run the installer and Git delivery tests</summary>
 
 From the repository folder, run:
 
 ```powershell
 pwsh -NoProfile -File .\tests\Test-Installer.ps1
+pwsh -NoProfile -File .\tests\Test-GitDeliveryIsolation.ps1
 ```
 
-The tests use temporary example folders under `.work`, including test junctions and logs. They do not install into your live Codex folder or use real credentials. These test files are excluded from Git.
+The tests use temporary example folders under `.work`, including test junctions, local Git repositories, and logs. The Git isolation check runs the delivery harness with a clean environment and an inherited template containing a harmless rejecting hook; both must pass without that ambient hook executing. The tests do not install into your live Codex folder, change your templates, or use real credentials. Generated test output is excluded from Git; maintained scripts and regression fixtures belong in the delivered change. See the [testing guide](tests/README.md) for prerequisites, expected results, Git failure cases, cleanup, and separate fresh-agent and image-selection acceptance checks.
 
 </details>
 

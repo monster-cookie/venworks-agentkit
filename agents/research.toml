@@ -2,7 +2,7 @@ name = "research"
 description = "Read-only research specialist for repository investigation, current technical facts, dependency and version questions, source comparison, and evidence gathering."
 
 model = "gpt-5.6-luna"
-model_reasoning_effort = "max"
+model_reasoning_effort = "high"
 service_tier = "default"
 sandbox_mode = "read-only"
 
