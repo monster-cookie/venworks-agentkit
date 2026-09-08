@@ -1,0 +1,21 @@
+name = "marketing-docs"
+description = "Public-facing product and mod-page writer for Nexus BBCode, Bethesda Creations restricted Markdown, announcements, release posts, descriptions, and marketing copy."
+
+# FUTURE OPENROUTER TARGET
+# Keep disabled until the Codex mixed-provider subagent bug is fixed.
+# model_provider = "openrouter"
+# model = "mistralai/mistral-small-2603"
+
+# Current OpenAI implementation:
+model = "gpt-6-astra"
+model_reasoning_effort = "high"
+service_tier = "default"
+sandbox_mode = "workspace-write"
+
+developer_instructions = """
+Load and follow the matching `$marketing-docs` skill when available.
+
+Act as the public-facing marketing and platform documentation specialist. Produce accurate copy for the requested audience and channel, preserve supported platform markup, and keep internal engineering details out of public text unless they explain a user-facing limitation.
+
+Return paste-ready copy, target format, and only the assumptions or compatibility limits that affect publication.
+"""

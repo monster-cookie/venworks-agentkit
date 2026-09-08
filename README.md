@@ -1,2 +1,214 @@
-# venworks-agentkit
-Shared Codex agents, skills, and workflow prompts with a portable installer.
+# Venworks AgentKit
+
+A ready-made Codex workflow for planning, coding, art, 3D modeling, research, reviews, and documentation.
+
+AgentKit gives Codex a set of specialist roles, shared instructions, and reusable task prompts. You describe the work, and the coordinator chooses the help it needs. The prompts can also read requirements from a Plane work item, so you do not have to copy everything into your task.
+
+**Your existing Codex settings stay yours.** Installing or updating AgentKit does not replace your existing configuration, connections, or model preferences.
+
+> [!NOTE]
+> **Planned: more model choices through OpenRouter.** The goal is to let selected specialists use OpenRouter models while your main Codex assistant continues using OpenAI. This is waiting on a Codex bug that can ignore a specialist's provider choice and send its request to the wrong provider. Follow [Codex issue #40858](https://github.com/openai/codex/issues/40858) for progress. OpenRouter support is currently disabled; it will need to be checked and configured after the fix is available.
+
+## What you get
+
+- **Eleven specialists** for coding, architecture, graphic design and art, 3D modeling, research, code review, deeper review, security review, technical documentation, user guides, and marketing copy.
+- **Twelve shared instruction sets**, called skills, that explain how the coordinator and specialists should work.
+- **Eight ready-to-use prompts** for new features, bug fixes, reviews, release preparation, documentation, marketing, and resuming unfinished work.
+- **Art and 3D work within feature delivery**, using the skills and tools available in your setup to create assets, keep editable source files, and check exports in the project where possible.
+- **One installer for setup and updates**, with previews, backups, and checks before replacing files you have changed.
+
+## Before you start
+
+You will need Windows, **PowerShell 7 or newer**, and a signed-in Codex installation that supports custom agents and skills. The older app named *Windows PowerShell* is not PowerShell 7.
+
+Your Codex account must have access to the models listed under [Model settings](#model-settings). Some settings also depend on your Codex version. The installer copies the files; it does not check model access or set up a Plane connection.
+
+## Install
+
+1. Download this repository using **Code → Download ZIP** on GitHub, then extract it. If you already use Git, cloning the repository works too. Keep the complete folder together.
+
+2. Open that folder in PowerShell 7. You should be in the folder containing `README.md` and the `tools` folder. Run this command to preview the installation:
+
+```powershell
+pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1 -WhatIf
+```
+
+The preview checks for problems and shows where AgentKit will be installed. It does not change any files.
+
+3. If the preview reports no problems, run the installation:
+
+```powershell
+pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1
+```
+
+Look for `Installed package` in the result. If the same version and files are already installed, you will see `Installation is already current` instead. Start a new Codex task to use the installed instructions.
+
+AgentKit normally installs into your user account's `.codex` folder. If you have set `CODEX_HOME`, it uses that location instead. It installs local copies, so you do not need to keep the downloaded folder in the same place afterward.
+
+### Optional: start with the example settings
+
+If you are setting up a Codex home that does not already have a `config.toml`, you can create one from [the example settings](Config-Settings.toml.example):
+
+```powershell
+pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1 -InitializeConfig -WhatIf
+pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1 -InitializeConfig
+```
+
+Read the example first. It includes the suggested models, support for multiple assistants, memory and context options, and a limit of 12 assistants running at once. It contains no account credentials or service connections. If you already have a configuration file, these commands leave it unchanged.
+
+## Give AgentKit a task
+
+Open a new Codex task in the project you want to work on. For a simple assignment, start your message with `$agent-router` and describe what you need:
+
+```text
+$agent-router
+
+Help me improve the installation instructions in this project so a first-time user can follow them.
+```
+
+For a more structured assignment, open the [prompt guide](prompts/README.md), choose a template, replace its bracketed fields, and paste the complete text block into Codex.
+
+The templates accept a Plane work-item ID or link. Codex needs access to Plane to read it. If you are not using Plane, replace the work-item input and the instruction to retrieve it with your own description of the task.
+
+For art or 3D modeling, choose the [full feature delivery prompt](prompts/01-full-feature-delivery.md) and fill in its `Art/3D requirements` field. Describe what you need and include references, file formats, dimensions, or scale when you know them. The workflow asks Codex to agree on those details, keep editable originals, and check that exported assets work in the intended project when the necessary tools are available. The included `graphic-design` and `3d-modeling` specialists each have a matching skill and use the creative tools available in your setup. Codex should tell you when a required tool or check is unavailable.
+
+The prompts are text you copy and paste, not automatically added menu items or slash commands. A copy is also installed in your Codex `prompts` folder.
+
+The workflow asks for reviews that fit the assignment. **Adversarial review—a deeper attempt to find hidden failures—is reserved for major new features, newly introduced frameworks or libraries, or an explicit request.** Routine fixes and documentation changes do not automatically need it. The instructions also ask assistants to preserve useful progress and report unfinished or unverified work honestly.
+
+## Update AgentKit
+
+Download and extract the latest complete package, then open its folder in PowerShell 7 and run the same commands:
+
+```powershell
+pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1 -WhatIf
+pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1
+```
+
+If you installed from a Git clone and have no local changes in that clone, you can run `git pull --ff-only` first instead of downloading another ZIP.
+
+There is no separate upgrade mode. The installer checks what changed, updates AgentKit's files, and leaves unrelated files and your existing configuration alone. Running it again when everything is current does not create extra backups. Start a new Codex task after updating.
+
+Close editors working on AgentKit's installed files and let one installation finish before starting another.
+
+### If you have edited an installed file
+
+The installer stops before replacing a conflicting file. Review the files it names and keep a separate copy of any changes you want to retain.
+
+If you intentionally want to replace those files with the package's versions, preview and then use `-Force`:
+
+```powershell
+pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1 -Force -WhatIf
+pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1 -Force
+```
+
+The previous files are backed up. Your existing `config.toml` is still preserved.
+
+When a newer package stops including a file, the installer backs up and removes the old copy if you have not edited it. If you have edited it, the update stops for your attention. With `-Force`, that edited file stays where it is and AgentKit stops managing it. An update that cannot keep it in place will still stop; move that file somewhere safe before retrying.
+
+## Moving from the earlier OneDrive setup
+
+Use this section only if you previously connected Codex's AgentKit folders to OneDrive with the old scripts.
+
+Those connections are called *junctions*: they make a local folder point to a shared folder somewhere else. The new installer asks you to choose migration explicitly before replacing a supported connection with a local copy:
+
+```powershell
+pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1 -MigrateJunctions -WhatIf
+pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1 -MigrateJunctions
+```
+
+Migration keeps the connected folder's contents locally and leaves the original shared files untouched. It supports connections for the whole `agents` and `prompts` folders and for individual skills included in this package. Other connection layouts are rejected. If your files also conflict with the package, follow the guidance under [edited files](#if-you-have-edited-an-installed-file).
+
+After migration, use this installer to update each computer. Stop using the old OneDrive publish/connect scripts for that Codex home, since reconnecting would restore the old folder links.
+
+## If something goes wrong
+
+| What you see | What to do |
+| --- | --- |
+| `pwsh` is not recognized | Make sure PowerShell 7 is installed, then reopen your terminal. |
+| The installer script cannot be found | Open PowerShell in the extracted package folder containing `README.md` and the `tools` folder, then try again. |
+| A message about conflicting or edited files | Review the named files using the steps above before choosing whether to replace them. |
+| A message about a junction or redirected folder | If you used the earlier OneDrive setup, check the migration section. Otherwise, review the location named in the message; `-Force` does not bypass these location checks. |
+| A model is unavailable in Codex | Check that your account and Codex version support the configured model. Installing the files does not grant model access. |
+| A write or recovery error | Keep the full error message and the backup folder shown in the result. Resolve the reported problem before trying again. |
+
+When an installation makes changes, it saves recovery information and any replaced files under `.venworks-agentkit/backups` in your Codex folder. Keep each backup folder and its contents together.
+
+The installer tries to undo its changes if a write fails. It cannot do that after a power loss or a forcibly closed process. If recovery is needed, preserve any newer edits and restore only the affected files identified in that backup's record. Do not delete your whole Codex folder. If you are unsure, ask for help using the error message and backup location before making more changes.
+
+## Model settings
+
+The included specialists use these settings. The *reasoning* column is the model's configured effort level.
+
+| Specialist | Model | Reasoning |
+| --- | --- | --- |
+| Coding | GPT-5.6 Sol | xhigh |
+| Software architecture | GPT-6 Astra | high |
+| Graphic design and art | GPT-6 Astra | xhigh |
+| 3D modeling | GPT-6 Astra | xhigh |
+| Code review | GPT-6 Astra | high |
+| Adversarial review | GPT-6 Astra | xhigh |
+| Security review | GPT-6 Astra | high |
+| Research | GPT-5.6 Luna | max |
+| Technical documentation | GPT-5.6 Luna | max |
+| User documentation | GPT-6 Astra | high |
+| Marketing documentation | GPT-6 Astra | high |
+
+Your main assistant keeps the model in your existing Codex settings. The optional example uses GPT-6 Astra with `xhigh` reasoning and GPT-5.6 Sol with `xhigh` as the default for additional assistants. The workflow uses the default service tier and does not enable Fast mode. It limits reasoning to `xhigh`, except for Luna, which may use `max`.
+
+### Future OpenRouter support
+
+The planned OpenRouter option would give selected specialists access to models from other providers. The [OpenRouter example](OpenRouter-Future.toml.example) and comments in four agent files are preparation for that option, not a working setup to enable today.
+
+The blocking [Codex provider issue (#40858)](https://github.com/openai/codex/issues/40858) reports that a specialist can pick up its assigned model while ignoring the provider assigned to it. The request then uses the parent's provider and can fail. The issue is open at the time of this update.
+
+Once the bug is resolved, the example settings and chosen models will need to be tested with the fixed Codex version before support is enabled. The installer does not turn on OpenRouter or set up credentials, and a failed request should not be expected to switch automatically to another model.
+
+## Advanced options and contributor notes
+
+<details>
+<summary>Use a different Codex folder</summary>
+
+Add `-CodexRoot` to select a different installation location:
+
+```powershell
+pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1 -CodexRoot 'D:\CodexHome' -WhatIf
+pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1 -CodexRoot 'D:\CodexHome'
+```
+
+Configure Codex separately to use that same location. This option changes where the files are installed, not how Codex is launched.
+
+</details>
+
+<details>
+<summary>How updates are tracked</summary>
+
+`VERSION` identifies the package version. The installer records its installed files and their hashes in `.venworks-agentkit/manifest.json` so it can detect updates and local edits. Keep that record in place. Backup storage must also remain a normal local directory, not a junction to another location.
+
+</details>
+
+<details>
+<summary>Keep personal data out of this public repository</summary>
+
+Only contribute reusable workflow files, documentation, installer/tests, and sanitized examples. Never copy your live Codex folder, configuration, credentials, sessions, or memories into this repository. Review your changes and scan for secrets before committing; `.gitignore` is only an extra precaution.
+
+Git commits can also include your email address. Check your Git identity before committing. Changing it affects future commits, not existing history. The installer does not commit or push anything.
+
+</details>
+
+<details>
+<summary>Run the installer tests</summary>
+
+From the repository folder, run:
+
+```powershell
+pwsh -NoProfile -File .\tests\Test-Installer.ps1
+```
+
+The tests use temporary example folders under `.work`, including test junctions and logs. They do not install into your live Codex folder or use real credentials. These test files are excluded from Git.
+
+</details>
+
+## License
+
+See [LICENSE](LICENSE).

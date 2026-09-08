@@ -1,0 +1,25 @@
+# Optional initial config for a new Codex home. Never replace an existing config.
+# Availability of these models and experimental features depends on the Codex build/account.
+model = "gpt-6-astra"
+model_reasoning_effort = "xhigh"
+model_verbosity = "medium"
+model_reasoning_summary = "auto"
+service_tier = "default"
+
+[features]
+memories = true
+context_management = true
+context_management.experimental_mode = true
+multi_agent = true
+multi_agent_v2 = true
+prevent_idle_sleep = true
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 12
+default_subagent_model = "gpt-5.6-sol"
+default_subagent_reasoning_effort = "xhigh"
+
+[memories]
+generate_memories = true
+use_memories = true

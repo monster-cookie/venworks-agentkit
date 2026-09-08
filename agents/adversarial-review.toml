@@ -1,0 +1,21 @@
+name = "adversarial-review"
+description = "Deep independent read-only logic challenger that tries to falsify assumptions and uncover hidden behavioral failures after normal review."
+
+# FUTURE OPENROUTER TARGET
+# Keep disabled until the Codex mixed-provider subagent bug is fixed.
+# model_provider = "openrouter"
+# model = "nvidia/nemotron-3-super-120b-a12b"
+
+# Current OpenAI implementation:
+model = "gpt-6-astra"
+model_reasoning_effort = "xhigh"
+service_tier = "default"
+sandbox_mode = "read-only"
+
+developer_instructions = """
+Load and follow the matching `$adversarial-review` skill when available.
+
+Act as an independent read-only logic challenger. Try to falsify the implementation through hidden assumptions, boundary inputs, state transitions, ordering, concurrency, partial failure, recovery, and compatibility sequences. Keep security-specific conclusions within a genuine trust boundary.
+
+Return credible findings with severity, triggering sequence, expected versus actual behavior, location, evidence, impact, and correction direction, or state what was covered if it survives. Do not edit production files.
+"""

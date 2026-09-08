@@ -1,0 +1,40 @@
+# Future OpenRouter configuration
+#
+# DO NOT ENABLE until the Codex mixed-provider subagent bug is fixed.
+#
+# Current failure mode:
+# A child agent may honor `model` while ignoring `model_provider`, which can
+# send an OpenRouter model slug to the OpenAI endpoint and fail the task.
+#
+# Intended provider block for ~/.codex/config.toml:
+#
+# [model_providers.openrouter]
+# name = "OpenRouter"
+# base_url = "https://openrouter.ai/api/v1"
+# wire_api = "responses"
+#
+# [model_providers.openrouter.auth]
+# command = "powershell"
+# args = [
+#   "-NoProfile",
+#   "-Command",
+#   "Write-Output $env:OPENROUTER_API_KEY"
+# ]
+#
+# Intended role mappings after the bug is fixed:
+#
+# user-docs.toml:
+#   model_provider = "openrouter"
+#   model = "mistralai/mistral-small-2603"
+#
+# marketing-docs.toml:
+#   model_provider = "openrouter"
+#   model = "mistralai/mistral-small-2603"
+#
+# adversarial-review.toml:
+#   model_provider = "openrouter"
+#   model = "nvidia/nemotron-3-super-120b-a12b"
+#
+# security-review.toml:
+#   model_provider = "openrouter"
+#   model = "nvidia/nemotron-3-super-120b-a12b"

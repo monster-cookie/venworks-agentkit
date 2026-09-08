@@ -1,0 +1,25 @@
+# Local work and generated distributions
+/.work/
+/dist/
+/backups/
+*.zip
+
+# Credentials and local environment
+.env
+.env.*
+!.env.example
+*.dpapi
+*.pem
+*.key
+auth.json
+config.toml
+
+# Never import a live agent home
+.codex/
+.agents/
+.venworks-agentkit/
+sessions/
+memories/
+logs/
+*.log
+__pycache__/
