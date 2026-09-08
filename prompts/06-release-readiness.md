@@ -15,5 +15,7 @@ Use appropriate research, review, and documentation specialists, plus tech-ops w
 
 Assess outstanding supported findings, tests/builds/packages, platform coverage, version consistency, installation/upgrade/recovery instructions, technical/user docs, and end-user changelog accuracy. Check marketing claims against actual candidate capabilities. Classify blockers and nonblocking follow-ups against acceptance criteria.
 
+Follow the `testing-handoff.md` reference from the loaded `$agent-router` skill. Evaluate the candidate's task-specific testing instructions and recorded evidence against the exact snapshot and target; report stale, missing, or unrun checks as blockers or follow-ups without running unauthorized checks or modifying the candidate.
+
 Apply shared lifecycle guidance. Deliver readiness, candidate identity, evidence, coverage, blockers, follow-ups, and uncertainty. State ready only when required criteria have supporting evidence. Do not infer readiness from a clean working tree or absence of reported findings.
 ```

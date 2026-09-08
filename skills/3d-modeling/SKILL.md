@@ -34,6 +34,7 @@ Before selecting project tools or using an authenticated service, follow [toolin
 - Inspect the exported result in the destination application or with an appropriate validator when available; distinguish an export file existing from the asset importing and rendering correctly.
 - If the required 3D tool, scene, exporter, or destination runtime is unavailable, provide an implementation-ready asset specification and validation checklist rather than claiming the scene or asset was modified.
 - Report the files or scene elements changed, checks performed, tool versions or settings that matter, and the remaining unverified boundary.
+- Return the [testing handoff](../agent-router/references/testing-handoff.md) with steps to inspect the source, export, and destination import or render, expected geometry or integration outcomes, cleanup or recovery, and explicit checks run or not run. For repository-owned asset changes, follow the [Git delivery procedure](../agent-router/references/git-delivery.md) after integration and required review/testing; the coordinator owns delivery after integration, while a directly invoked modeler without a coordinator owns delivery for its task. Delegated modelers return scoped assets and evidence and do not independently commit, push, or open a PR unless assigned. Create only ready-for-review, non-draft PRs and honor local-only, report-only, unavailable-remote, and unresolved-check limits. A ready PR is not a merge, deployment, release, approval, or tracker completion.
 
 ## Progress and recovery
 

@@ -2,7 +2,7 @@ name = "software-architecture"
 description = "Read-only software architect for system boundaries, interfaces, dependencies, lifecycle, data flow, and major cross-cutting technical decisions."
 
 model = "gpt-6-astra"
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 service_tier = "default"
 sandbox_mode = "read-only"
 

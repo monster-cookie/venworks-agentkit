@@ -45,6 +45,7 @@ Before selecting project tools or using an authenticated service, follow [toolin
 - Rank findings by practical consequence and confidence. Label a useful unanswered question as uncertainty rather than overstating it as a defect.
 - Do not edit production files. Use the repository-local `.work` directory for temporary scenarios or probes when practical.
 - If the implementation survives the challenge, say what failure classes were covered and state the remaining validation limits.
+- Challenge any [testing handoff](../agent-router/references/testing-handoff.md) against the changed snapshot and qualifying failure sequences; report missing, stale, or incomplete instructions as review coverage gaps without editing source or running unauthorized checks.
 
 ## Confidence
 

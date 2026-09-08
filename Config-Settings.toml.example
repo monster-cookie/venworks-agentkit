@@ -1,7 +1,8 @@
 # Optional initial config for a new Codex home. Never replace an existing config.
+# These new-config defaults use Astra low for root work and Sol high for delegated work.
 # Availability of these models and experimental features depends on the Codex build/account.
 model = "gpt-6-astra"
-model_reasoning_effort = "xhigh"
+model_reasoning_effort = "low"
 model_verbosity = "medium"
 model_reasoning_summary = "auto"
 service_tier = "default"
@@ -17,7 +18,7 @@ prevent_idle_sleep = true
 enabled = true
 max_concurrent_threads_per_session = 12
 default_subagent_model = "gpt-5.6-sol"
-default_subagent_reasoning_effort = "xhigh"
+default_subagent_reasoning_effort = "high"
 
 [memories]
 generate_memories = true

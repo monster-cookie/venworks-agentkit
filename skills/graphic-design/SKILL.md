@@ -34,12 +34,19 @@ Before selecting project tools or using an authenticated service, follow [toolin
 - Do not claim to have generated, edited, rendered, or exported a binary visual asset unless an appropriate tool actually completed that operation.
 - Use the repository-local `.work` directory for temporary visual references and intermediate artifacts when practical, and keep final assets within the authorized target paths.
 
+## Image model and tool boundary
+
+The reasoning model for this specialist is separate from the image-generation backend. When available, prefer the native `image_gen.imagegen` tool for raster work, and preserve SVG or other vector-native editing when that is the better fit for the requested output. Select an image backend only when the active tool exposes model selection, and identify the backend only when runtime metadata verifies it; if neither is exposed, report that limitation rather than setting up an API, credentials, or a fallback solely to choose a model.
+
+When an already-authorized image tool or API exposes model selection, follow OpenAI's [image-generation guidance](https://developers.openai.com/api/docs/guides/image-generation): use `gpt-image-2.5-flare` for fast, high-quality everyday generation and `gpt-image-2.5-sunburst` when editing precision matters most. The [API changelog](https://developers.openai.com/api/docs/changelog) lists both models; this guidance does not authorize API setup or credential changes.
+
 ## Verify the result
 
 - Inspect the final composition at the target size and at a representative smaller size when scaling or responsive use matters.
 - Check contrast, text legibility, alignment, protected regions, transparency, crop behavior, file format, dimensions, and naming against the destination requirements.
 - Confirm that referenced fonts, images, icons, and source files exist or clearly mark them as required inputs.
 - Report what was visually or technically checked, what tool produced the result, and which visual or platform behaviors remain unverified.
+- Return the [testing handoff](../agent-router/references/testing-handoff.md) with steps to inspect the editable source and export at the target and representative sizes, expected visual or technical outcomes, cleanup for temporary assets, and explicit checks run or not run. For repository-owned asset changes, follow the [Git delivery procedure](../agent-router/references/git-delivery.md) after integration and required review/testing; the coordinator owns delivery after integration, while a directly invoked designer without a coordinator owns delivery for its task. Delegated designers return scoped assets and evidence and do not independently commit, push, or open a PR unless assigned. Create only ready-for-review, non-draft PRs and honor local-only, report-only, unavailable-remote, and unresolved-check limits. A ready PR is not a merge, deployment, release, approval, or tracker completion.
 
 ## Progress and recovery
 

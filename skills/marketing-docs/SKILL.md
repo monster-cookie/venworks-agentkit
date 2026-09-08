@@ -46,6 +46,7 @@ Before selecting project tools or using an authenticated service, follow [toolin
 - Check markup balance, escaping, URL targets, image availability, list nesting, and code or quote delimiters for the selected platform.
 - Check that the opening copy still makes sense when previews truncate the body.
 - State any unverified asset, platform, or version assumption before publication rather than silently guessing.
+- Include the [testing handoff](../agent-router/references/testing-handoff.md) with claim/source, markup, link, asset, preview, accessibility, and platform checks plus expected outcomes; mark publication or platform checks that were not run. For repository-owned marketing content or assets, follow the [Git delivery procedure](../agent-router/references/git-delivery.md) after integration and required review/testing; the coordinator owns delivery after integration, while a directly invoked marketing specialist without a coordinator owns delivery for its task. Delegated marketing specialists return scoped content and evidence and do not independently commit, push, or open a PR unless assigned. Create only ready-for-review, non-draft PRs and honor local-only, report-only, unavailable-remote, and unresolved-check limits. A ready PR is not a merge, deployment, release, approval, or tracker completion. External publication, CMS edits, deployments, and external messages remain subject to their separate authorization.
 
 ## Progress and recovery
 

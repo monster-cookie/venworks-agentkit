@@ -36,6 +36,7 @@ Before selecting project tools or using an authenticated service, follow [toolin
 - Check dependency ordering, replacements, destructive actions, drift, missing variables, provider version changes, and output sensitivity in the plan or validation result.
 - Validate generated configuration and plan artifacts without committing secrets or machine-specific state. Keep temporary artifacts in the repository-local `.work` directory when practical.
 - Do not invoke Codex Security scans or automatically add a security review merely because infrastructure is involved; route security work only when the user explicitly requests it.
+- Prepare the [testing handoff](../agent-router/references/testing-handoff.md) with exact target and state prerequisites, local validation, authorized plan/apply/runtime boundaries, expected observations, cleanup or recovery, and explicit executed versus not-run checks; refresh it after changes or target drift.
 
 ## Execute and recover
 
@@ -47,11 +48,11 @@ Before selecting project tools or using an authenticated service, follow [toolin
 
 ## Handoff
 
-Return the target and state context, the files or resources affected, the distinction between local validation and provider operations, commands or checks actually run, sensitive-artifact handling, and remaining risks or recovery steps. State explicitly when a plan was generated but no apply occurred, or when an external result remains uncertain.
+Return the target and state context, the files or resources affected, the distinction between local validation and provider operations, commands or checks actually run, sensitive-artifact handling, and remaining risks or recovery steps. Include the current [testing handoff](../agent-router/references/testing-handoff.md), and state explicitly when a plan was generated but no apply occurred, or when an external result remains uncertain.
 
 ## Pull-request handoff
 
-When preparing or creating a PR, follow [diagram and pull-request guidance](../agent-router/references/diagrams-and-prs.md): include a relevant Mermaid diagram for structural or behavioral flows and use PR Lens when available and appropriate. Keep the description and visuals aligned with the final change and actual validation. PR creation requires task authorization; create only ready-for-review PRs.
+When preparing or creating a PR, follow [diagram and pull-request guidance](../agent-router/references/diagrams-and-prs.md) and the [Git delivery procedure](../agent-router/references/git-delivery.md): include a relevant Mermaid diagram for structural or behavioral flows and use PR Lens when available and appropriate. Keep the description and visuals aligned with the final change and actual validation. The coordinator owns Git delivery once after integration, review, and testing; a directly invoked tech-ops specialist without a coordinator owns delivery for its task; delegated tech-ops specialists return scoped work and do not independently commit, push, or open a PR unless assigned. Create only ready-for-review, non-draft PRs and honor local-only, report-only, unavailable-remote, and unresolved-check limits. A ready PR is not a merge, deployment, release, approval, or tracker completion.
 
 ## Progress and recovery
 

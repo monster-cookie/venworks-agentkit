@@ -43,6 +43,7 @@ Before selecting project tools or using an authenticated service, follow [toolin
 - Check both the requested path and an important nearby failure path when the change affects parsing, persistence, lifecycle, concurrency, configuration, or user data.
 - Report exactly which checks ran and their outcomes. Never imply that an unrun test, build, deployment, or runtime behavior was validated.
 - If a check cannot run, preserve the failure output and explain whether it is an environment limitation, an unrelated failure, or a defect introduced by the change.
+- Prepare the [testing handoff](../agent-router/references/testing-handoff.md) for the changed behavior with copyable commands or manual steps, expected results, proportionate regression or failure checks, cleanup, and explicit executed versus not-run checks; refresh it after final fixes or snapshot changes.
 
 ## Failure handling
 
@@ -53,11 +54,11 @@ Before selecting project tools or using an authenticated service, follow [toolin
 
 ## Handoff
 
-Return a concise summary of the behavior changed, modified files, validation performed, and remaining risks or decisions. Include exact commands or test names when they make the result reproducible.
+Return a concise summary of the behavior changed, modified files, validation performed, and remaining risks or decisions. Include the current [testing handoff](../agent-router/references/testing-handoff.md) or a direct link to an authorized guide, separating instructions from checks actually run and stating runtime or platform limits.
 
 ## Pull-request handoff
 
-When preparing or creating a PR, follow [diagram and pull-request guidance](../agent-router/references/diagrams-and-prs.md): include a relevant Mermaid diagram for structural or behavioral flows and use PR Lens when available and appropriate. Keep the description and visuals aligned with the final change and actual validation. PR creation requires task authorization; create only ready-for-review PRs.
+When preparing or creating a PR, follow [diagram and pull-request guidance](../agent-router/references/diagrams-and-prs.md) and the [Git delivery procedure](../agent-router/references/git-delivery.md): include a relevant Mermaid diagram for structural or behavioral flows and use PR Lens when available and appropriate. Keep the description and visuals aligned with the final change and actual validation. The coordinator owns Git delivery once after integration, review, and testing; a directly invoked coding specialist without a coordinator owns delivery for its task; delegated coding specialists return scoped work and do not independently commit, push, or open a PR unless assigned. Create only ready-for-review, non-draft PRs and honor local-only, report-only, unavailable-remote, and unresolved-check limits. A ready PR is not a merge, deployment, release, approval, or tracker completion.
 
 ## Progress and recovery
 

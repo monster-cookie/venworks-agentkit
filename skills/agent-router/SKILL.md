@@ -23,21 +23,23 @@ The root should classify the work, delegate bounded specialist tasks, wait for r
 
 Use this workflow across software, infrastructure, creative, and documentation projects. Establish the project's domain, toolchain, target environments, and conventions from its instructions and actual files. Do not assume a game engine, vendor, cloud provider, repository layout, or deployment target. Load platform-specific guidance only when that platform is part of the requested work.
 
-Expected current topology:
+Packaged starting defaults (the root setting is only in the optional example config; preserve the user's existing root model and effort):
 
-- root/orchestrator: `gpt-6-astra` with `xhigh`
-- coding: `gpt-5.6-sol` with `xhigh`
-- tech-ops: `gpt-5.6-sol` with `xhigh`
-- software-architecture: `gpt-6-astra` with `high`
-- graphic-design: `gpt-6-astra` with `xhigh`
-- 3d-modeling: `gpt-6-astra` with `xhigh`
-- code-review: `gpt-6-astra` with `high`
-- adversarial-review: `gpt-6-astra` with `xhigh`
-- security-review: `gpt-6-astra` with `high`
-- research: `gpt-5.6-luna` with `max`
-- technical-docs: `gpt-5.6-luna` with `max`
-- user-docs: `gpt-6-astra` with `high`
-- marketing-docs: `gpt-6-astra` with `high`
+- root/orchestrator: `gpt-6-astra` with `low`
+- coding: `gpt-5.6-sol` with `high`
+- tech-ops: `gpt-5.6-sol` with `high`
+- software-architecture: `gpt-6-astra` with `medium`
+- graphic-design: `gpt-6-astra` with `low`
+- 3d-modeling: `gpt-6-astra` with `high`
+- code-review: `gpt-6-astra` with `medium`
+- adversarial-review: `gpt-6-astra` with `high`
+- security-review: `gpt-6-astra` with `medium`
+- research: `gpt-5.6-luna` with `high`
+- technical-docs: `gpt-5.6-luna` with `high`
+- user-docs: `gpt-6-astra` with `low`
+- marketing-docs: `gpt-6-astra` with `low`
+
+Use the configured role default for a well-scoped assignment. Reasoning labels are relative to each model; do not assume an exact quality or cost equivalence between Astra `low` (Light) and Sol `high`. Preserve explicit user model/effort choices. Increase effort for concrete unresolved ambiguity, difficult interactions, or inadequate results, explaining why; do not choose `xhigh` merely because a task is delegated or a role previously used it. Use only supported overrides exposed by the current runtime, within the effort cap above. If an override is unavailable, report that limitation and continue with the available configuration when viable; do not rewrite installed settings or claim an active worker changed models. Higher effort does not replace independent review or verification.
 
 Future OpenRouter targets are documented but disabled in the affected agent TOML files until Codex correctly honors mixed-provider subagent configuration.
 
@@ -208,12 +210,18 @@ For substantial implementation work, use only the stages that materially apply:
 5. code-review
 6. adversarial-review, only for major new features, a new framework/library, or an explicit user request
 7. the appropriate documentation specialist when behavior or public information changed
+8. testing handoff for every implemented change, owned by the implementing specialist and checked by the coordinator
+9. commit, push, and ready-for-review PR for repository implementation work, owned by the coordinator unless explicitly assigned
 
 Dependent stages must run in order.
 
 Independent research or documentation preparation may run in parallel when it does not depend on unfinished implementation details.
 
 Do not invoke every specialist mechanically.
+
+The testing handoff also applies to small root-only changes, direct specialist invocation, fixes, assets, infrastructure, and documentation edits. Follow [testing instructions and handoff](references/testing-handoff.md). The implementer supplies concrete steps and expected results; use `technical-docs` to assemble a larger developer/operator guide or `user-docs` for end-user acceptance steps when that adds value. Finalize the instructions after the last fixes and documentation updates, and include them or a direct artifact link in the final delivery. This is a required deliverable, not a requirement to spawn another agent. Review-only work retains its read-only scope.
+
+For implementation tasks in a Git repository, commit, push, and a ready-for-review PR are part of the default definition of done. Follow [Git delivery and definition of done](references/git-delivery.md); do not require a separate user prompt for these ordinary delivery steps. The coordinator delivers the integrated result once; delegated specialists hand back their changes unless explicitly assigned Git delivery ownership. Explicit local-only/no-Git/no-remote restrictions and review, research, planning, or report-only scope take precedence. This does not include merge, deployment, release publication, or external tracker completion.
 
 When adversarial review is required, run it independently after normal review and preserve its original findings before reconciliation. Re-review corrections affecting the qualifying feature or integration as needed; do not restart adversarial review for later documentation/changelog edits, unrelated routine fixes, or minor changes. A previously completed adversarial stage does not make it mandatory for every subsequent change.
 
@@ -261,16 +269,18 @@ Request checkpoints at useful milestones without interrupting healthy work. Pres
 
 ## Diagrams and generated pull requests
 
-Require Mermaid Markdown diagrams in software architecture and technical documentation when explaining structure, interactions, data flow, or lifecycle. Apply [diagram and pull-request guidance](references/diagrams-and-prs.md) to every generated PR description. Include a relevant Mermaid diagram when the change affects those relationships, and use PR Lens when available and appropriate under that guidance. Keep diagrams aligned with the final reviewed change. Create only ready-for-review PRs when PR creation is authorized.
+Require Mermaid Markdown diagrams in software architecture and technical documentation when explaining structure, interactions, data flow, or lifecycle. Apply [diagram and pull-request guidance](references/diagrams-and-prs.md) to every generated PR description. Include a relevant Mermaid diagram when the change affects those relationships, and use PR Lens when available and appropriate under that guidance. Keep diagrams aligned with the final reviewed change. Create only ready-for-review PRs as part of default implementation delivery, subject to [Git delivery scope and ownership](references/git-delivery.md).
 
 ## Completion Gate
 
-Before claiming the delegated task complete, confirm:
+Before claiming the overall task complete, confirm:
 
 - every required subagent was actually spawned and its actual deliverable retrieved
 - material findings and coverage were accounted for, including unresolved or rejected findings and their reasons
 - fixes were performed only when authorized, with appropriate verification
 - checks reported as passed actually ran and passed; unverified worker claims remain labelled
+- every implemented change has current, actionable testing instructions and expected results, with completed checks distinguished from remaining verification
+- when Git delivery applies, the integrated changes are committed and pushed and the task PR is verified open and ready for review; report the commit, branch, and PR URL, or the explicit restriction/non-Git scope that makes those steps inapplicable
 - no required work is still running, blocked, missing, or otherwise incomplete
 
 Do not terminate a required worker to satisfy this gate. If work cannot complete, report partial results and the evidence-based status, responsible worker/task IDs, remaining scope, and next action. An explicit handoff may preserve an active task with its ownership and continuation documented; do not call that underlying work complete.
@@ -285,6 +295,8 @@ The final result should focus on:
 
 - what changed
 - what was verified
+- how to test the delivered change, with steps and expected results or a direct link to those instructions
+- the commit, pushed branch, and ready-for-review PR link when Git delivery applies, or the precise restricted/partial delivery status
 - important review findings
 - remaining risks or limitations
 

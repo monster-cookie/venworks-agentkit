@@ -36,6 +36,8 @@ Before selecting project tools or using an authenticated service, follow [toolin
 - Do not edit production files while reviewing. Use the repository-local `.work` directory for temporary review artifacts when practical.
 - If no material defect is supported by the evidence, say so clearly and mention any meaningful validation limitation instead of inventing findings.
 
+When implementation or testing instructions are in scope, inspect the [testing handoff](../agent-router/references/testing-handoff.md) for meaningful coverage, stale snapshot references, expected outcomes, and unrun runtime or platform checks. Report gaps as review findings or coverage limits without editing source or granting execution permission.
+
 ## Finding threshold
 
 - A finding should identify a reachable condition, incorrect behavior, or contract risk that a maintainer can act on.

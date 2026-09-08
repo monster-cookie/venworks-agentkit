@@ -8,7 +8,7 @@ description = "Opt-in local security reviewer for explicitly requested project s
 
 # Current OpenAI implementation:
 model = "gpt-6-astra"
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 service_tier = "default"
 sandbox_mode = "read-only"
 

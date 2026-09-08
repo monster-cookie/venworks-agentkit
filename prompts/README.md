@@ -2,6 +2,8 @@
 
 Open a Codex task in the intended project, choose a template, replace bracketed fields, and paste the complete text block. Install the packaged agents and skills first. These are assignments, not slash commands or extra skills. The skills and shared lifecycle reference remain the source of workflow procedures.
 
+Every template that changes or delivers an artifact requires a current [testing handoff](../skills/agent-router/references/testing-handoff.md) in the final response or an authorized guide. The implementing role supplies it; review-only and release-readiness templates consume it and report gaps without gaining permission to edit or execute unauthorized checks.
+
 Use a Plane work-item ID or URL as the primary input. Each template reads the item and relevant linked context for its requirements instead of asking you to paste them. Resolve material missing information using project context or a focused question; do not invent requirements. Reading a Plane item does not authorize changing it. For work without a Plane item, replace that input and retrieval sentence with a direct assignment.
 
 | Template | Purpose |
@@ -15,7 +17,7 @@ Use a Plane work-item ID or URL as the primary input. Each template reads the it
 | [Resume interrupted work](07-resume-interrupted-work.md) | Recovery and continuation of unfinished authorized work |
 | [Documentation audit](08-documentation-audit.md) | Technical and user documentation accuracy |
 
-Read the permissions inside the selected prompt. Editing templates authorize scoped local deliverables and relevant checks; review-only and readiness templates authorize reports only. Change permissions explicitly if publication or other external actions are required. Preserve existing approvals rather than re-requesting them. Leave optional budgets/deadlines unspecified unless you actually intend a limit.
+Read the permissions inside the selected prompt. Change-producing templates authorize scoped local deliverables and, when Git delivery applies, the ordinary commit, push, and ready-for-review pull-request steps described by `git-delivery.md` after required checks; review-only and readiness templates authorize reports only. Local-only, report-only, unavailable-remote, and unresolved-check restrictions still apply. Change permissions explicitly for publication, merge, deployment, release, tracker, or other external-record actions. Preserve existing approvals rather than re-requesting them. Leave optional budgets/deadlines unspecified unless you actually intend a limit.
 
 Specify a base revision and working-tree scope for change reviews, or explicitly request a whole-project review. File counts do not prove substantive coverage. When adversarial review is required, both initial reviewers inspect the same snapshot independently before reconciliation. After fixes, recheck affected coverage and interactions rather than automatically repeating every full-project scan.
 
@@ -25,4 +27,4 @@ The installer copies agents, skills, and this prompt folder into the selected Co
 
 ## Project tooling and identities
 
-Before running a selected template, the router and specialists follow the [optional tooling and credential policies](../skills/agent-router/references/tooling-and-credentials.md). Shared defaults can name your GitHub or Plane automation identity; repository entries can select role-specific tools and targets. Task restrictions still apply, including read-only review and report-only release-readiness scopes. Setup templates live in the repository's top-level example/ directory and are not installed into Codex; copying a template does not adopt it or authenticate a tool.
+Before running a selected template, the router and specialists follow the [optional tooling and credential policies](../skills/agent-router/references/tooling-and-credentials.md). Shared defaults can name your GitHub or Plane automation identity; repository entries can select role-specific tools and targets. For change-producing templates, after required checks pass, follow the `git-delivery.md` procedure from the loaded `$agent-router` skill to commit scoped work, push to the intended origin or delivery remote, and open or update a ready-for-review, non-draft pull request. Task restrictions still apply, including local-only, read-only review, report-only release-readiness, unavailable remote, and unresolved required-check scopes; no merge, deploy, release, or unrelated external-record update is implied. Setup templates live in the repository's top-level example/ directory and are not installed into Codex; copying a template does not adopt it or authenticate a tool.
