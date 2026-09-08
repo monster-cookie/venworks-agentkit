@@ -1,5 +1,5 @@
 name = "marketing-docs"
-description = "Public-facing product and mod-page writer for Nexus BBCode, Bethesda Creations restricted Markdown, announcements, release posts, descriptions, and marketing copy."
+description = "Public-facing marketing writer for websites, product and service descriptions, announcements, release posts, and channel-specific copy."
 
 # FUTURE OPENROUTER TARGET
 # Keep disabled until the Codex mixed-provider subagent bug is fixed.

@@ -1,6 +1,6 @@
 ---
 name: agent-router
-description: Route non-trivial Codex work to specialized subagents for implementation, architecture, graphic design, 3D modeling, research, technical documentation, end-user documentation, marketing/platform documentation, normal code review, adversarial logic review, and explicitly requested security review. Use when a task spans multiple stages, benefits from independent review, or the user asks for agents, delegation, orchestration, or subagents.
+description: Route non-trivial Codex work to specialized subagents for implementation, infrastructure operations, architecture, graphic design, 3D modeling, research, technical documentation, end-user documentation, marketing/platform documentation, normal code review, adversarial logic review, and explicitly requested security review. Use when a task spans multiple stages, benefits from independent review, or the user asks for agents, delegation, orchestration, or subagents.
 ---
 
 # Agent Router
@@ -15,10 +15,15 @@ Use the root agent as the orchestrator and integrator.
 
 The root should classify the work, delegate bounded specialist tasks, wait for required results, resolve conflicts, integrate findings, and present the final result.
 
+## Project scope
+
+Use this workflow across software, infrastructure, creative, and documentation projects. Establish the project's domain, toolchain, target environments, and conventions from its instructions and actual files. Do not assume a game engine, vendor, cloud provider, repository layout, or deployment target. Load platform-specific guidance only when that platform is part of the requested work.
+
 Expected current topology:
 
 - root/orchestrator: `gpt-6-astra` with `xhigh`
 - coding: `gpt-5.6-sol` with `xhigh`
+- tech-ops: `gpt-5.6-sol` with `xhigh`
 - software-architecture: `gpt-6-astra` with `high`
 - graphic-design: `gpt-6-astra` with `xhigh`
 - 3d-modeling: `gpt-6-astra` with `xhigh`
@@ -34,7 +39,7 @@ Future OpenRouter targets are documented but disabled in the affected agent TOML
 
 ## Specialist workflow skills
 
-Each named agent has a matching skill: `coding`, `software-architecture`, `graphic-design`, `3d-modeling`, `code-review`, `adversarial-review`, `security-review`, `research`, `technical-docs`, `user-docs`, and `marketing-docs`. The agent TOML defines the role and runtime settings; the skill contains its procedure. Ask the selected specialist to load its matching skill. Load only the workflows relevant to the task, and do not delegate again merely because a specialist skill is used. The root can also use a workflow directly for a bounded task.
+Each named agent has a matching skill: `coding`, `tech-ops`, `software-architecture`, `graphic-design`, `3d-modeling`, `code-review`, `adversarial-review`, `security-review`, `research`, `technical-docs`, `user-docs`, and `marketing-docs`. The agent TOML defines the role and runtime settings; the skill contains its procedure. Ask the selected specialist to load its matching skill. Load only the workflows relevant to the task, and do not delegate again merely because a specialist skill is used. The root can also use a workflow directly for a bounded task.
 
 ## Delegation Gate
 
@@ -70,6 +75,15 @@ Use `coding` for:
 - build failures
 - targeted tests
 - implementation validation
+
+Use `tech-ops` for:
+
+- infrastructure-as-code configuration, modules, and provisioning plans
+- cloud or on-premises infrastructure operations and drift investigation
+- infrastructure delivery pipelines, environment configuration, and state/backend handling
+- executing an authorized infrastructure change and verifying its outcome
+
+Use the project's existing infrastructure tools and target environment. Coordinate with `software-architecture` for material design decisions and `coding` for application code. The task's authorization determines whether work ends at a reviewable plan or includes live changes; infrastructure work does not automatically authorize applying, destroying, or migrating resources.
 
 Use `software-architecture` for:
 
@@ -126,10 +140,10 @@ Use `user-docs` for:
 
 Use `marketing-docs` for:
 
-- Nexus descriptions and BBCode
-- Bethesda Creations pages and restricted Markdown
+- website and landing-page copy
+- product listings and publishing-channel formatting
 - public announcements
-- product/mod descriptions
+- product and service descriptions
 - launch and release posts
 - marketing-oriented feature summaries
 
@@ -179,14 +193,14 @@ Report an evident defect encountered during already-authorized work within that 
 
 Do not substitute one review type for another.
 
-## Normal Software Workflow
+## Normal Delivery Workflow
 
-For substantial software changes, use only the stages that materially apply:
+For substantial implementation work, use only the stages that materially apply:
 
 1. research, when repository or external investigation is needed
 2. software-architecture, when a real architectural decision is required
 3. graphic-design and/or 3d-modeling, when the task needs visual or 3D assets
-4. coding
+4. coding for application work or tech-ops for infrastructure work, as appropriate
 5. code-review
 6. adversarial-review, only for major new features, a new framework/library, or an explicit user request
 7. the appropriate documentation specialist when behavior or public information changed
@@ -203,7 +217,7 @@ When adversarial review is required, run it independently after normal review an
 
 The implementation agent must not be the only reviewer of its own work.
 
-When a reviewer reports a credible implementation defect, preserve it and send it back to `coding` for correction only when fixes are authorized, then rerun relevant verification or review. For review-only work, deliver the findings and stop before source changes.
+When a reviewer reports a credible implementation defect, preserve it and send it back to the responsible `coding` or `tech-ops` specialist for correction only when fixes are authorized, then rerun relevant verification or review. For review-only work, deliver the findings and stop before source changes.
 
 Do not silently discard reviewer findings.
 
@@ -239,6 +253,10 @@ For all delegated work and long-running root-owned operations, read and apply [t
 A wait timeout means check progress, not cancel, finalize, restart, or mark failed. Quiet execution and unanswered checkpoint requests do not prove a stall. Use available evidence to distinguish running, progress unknown, blocked on input, execution failed, cancelled, partial, and completed states. User stop requests, explicit budgets/deadlines, and concrete safety concerns still apply.
 
 Request checkpoints at useful milestones without interrupting healthy work. Preserve partial results within existing permissions, inspect side-effect outcomes before retry, and verify ownership has ended before launching a replacement writer. Resume existing work or assign only remaining scope when recovery is necessary. Do not impose fixed heartbeat requirements or infer execution deadlines from repeated waits.
+
+## Diagrams and generated pull requests
+
+Require Mermaid Markdown diagrams in software architecture and technical documentation when explaining structure, interactions, data flow, or lifecycle. Apply [diagram and pull-request guidance](references/diagrams-and-prs.md) to every generated PR description. Include a relevant Mermaid diagram when the change affects those relationships, and use PR Lens when available and appropriate under that guidance. Keep diagrams aligned with the final reviewed change. Create only ready-for-review PRs when PR creation is authorized.
 
 ## Completion Gate
 

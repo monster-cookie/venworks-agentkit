@@ -16,7 +16,7 @@ For an eligible requested review, evaluate whether an attacker or genuinely untr
 - Read applicable repository instructions and identify assets, trust boundaries, principals, attacker capabilities, deployment context, and security-relevant assumptions.
 - Trace untrusted data from its source through parsing, validation, authorization, transformations, storage, logging, and security-sensitive sinks.
 - Check authentication and authorization decisions, secret handling, command or process execution, filesystem paths, deserialization, plugin or executable content, network interfaces, and sensitive information exposure when present.
-- Verify whether an input is actually attacker-controlled in the real workflow. For local game or modding code, ordinary installed content is not a remote hostile actor unless the deployment or distribution path makes it externally controlled.
+- Verify whether an input is actually attacker-controlled in the real workflow. Distinguish trusted local configuration and installed extensions from attacker-controlled input using the actual deployment and distribution model.
 
 ## Validate findings
 

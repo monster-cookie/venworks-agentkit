@@ -28,7 +28,7 @@ Use this skill for documentation consumed by developers, maintainers, operators,
 - Start with purpose, audience, prerequisites, and the boundary of what the document covers.
 - Describe the normal workflow from the reader's entry point to the expected result.
 - Place contracts, configuration, examples, failure modes, recovery, and compatibility notes beside the workflow they explain.
-- Use a diagram or table only when it clarifies ownership, data flow, mappings, or state transitions better than prose.
+- Include Mermaid diagrams in fenced `mermaid` Markdown blocks for architecture, ownership, data flow, interaction ordering, and state transitions when these relationships are part of the document. Keep the diagram synchronized with the implementation and explain it in adjacent prose; use tables for simple mappings. Follow [diagram and pull-request guidance](../agent-router/references/diagrams-and-prs.md).
 - Link to authoritative source files or adjacent docs without duplicating their entire content.
 - Mark planned, deprecated, experimental, and version-specific behavior so it cannot be mistaken for the current contract.
 
