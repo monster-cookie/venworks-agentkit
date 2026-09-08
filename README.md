@@ -197,9 +197,9 @@ OpenAI calls `low` **Light** in the app and recommends using the lowest effort t
 
 ### Image generation for graphic design
 
-The graphic-design specialist's Astra setting controls planning, tool use, and review. The model that renders an image is a separate tool setting. OpenAI's September 8, 2026 release adds **GPT Image 2.5 Flare** for fast everyday generation and **GPT Image 2.5 Sunburst** for precise editing; these are the preferred choices when an authorized image tool exposes explicit model selection. See the [release notes](https://developers.openai.com/api/docs/changelog) and [image-generation guide](https://developers.openai.com/api/docs/guides/image-generation).
+The graphic-design specialist's Astra setting controls planning, tool use, and review. The model that renders an image is a separate tool setting. OpenAI's September 8, 2026 release adds [**GPT Image 2.5 Flare**](https://developers.openai.com/api/docs/models/gpt-image-2.5-flare) for fast everyday generation and [**GPT Image 2.5 Sunburst**](https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst) for precise editing. These are the preferred choices when an authorized image tool exposes model selection and its endpoint, tool/SDK options, and configured account support the requested model. AgentKit checks current official guidance and available capability evidence; a public model listing alone does not prove account or tool access. See the [release notes](https://developers.openai.com/api/docs/changelog) and [image-generation guide](https://developers.openai.com/api/docs/guides/image-generation).
 
-The graphic-design subagent can use the built-in image-generation tool when that tool is available to it. The interface checked for this update exposes no model selector or backend identity, so AgentKit cannot force or confirm Image 2.5 through that interface. It keeps the available built-in path and reports this limitation when a particular image model is requested. Explicit API model selection needs an authorized, configured API workflow; installing AgentKit does not set up that access. Existing SVG and other editable vector assets still use the appropriate native tools.
+The graphic-design subagent can use the built-in image-generation tool when that tool is available to it. The interface checked for this update exposes no model selector or backend identity, so AgentKit cannot force or confirm Image 2.5 through that interface. It keeps the available built-in path and reports this limitation when a particular image model is requested. Unsupported or unverified selections are reported without silently substituting a model or claiming a backend ran. Explicit API model selection needs an authorized, configured API workflow; installing AgentKit does not set up that access or update installed wrappers. Existing SVG and other editable vector assets still use the appropriate native tools.
 
 ### Future OpenRouter support
 
@@ -242,15 +242,16 @@ Git commits can also include your email address. Check your Git identity before 
 </details>
 
 <details>
-<summary>Run the installer tests</summary>
+<summary>Run the installer and Git delivery tests</summary>
 
 From the repository folder, run:
 
 ```powershell
 pwsh -NoProfile -File .\tests\Test-Installer.ps1
+pwsh -NoProfile -File .\tests\Test-GitDeliveryIsolation.ps1
 ```
 
-The tests use temporary example folders under `.work`, including test junctions and logs. They do not install into your live Codex folder or use real credentials. These test files are excluded from Git.
+The tests use temporary example folders under `.work`, including test junctions, local Git repositories, and logs. The Git isolation check runs the delivery harness with a clean environment and an inherited template containing a harmless rejecting hook; both must pass without that ambient hook executing. The tests do not install into your live Codex folder, change your templates, or use real credentials. Generated test output is excluded from Git; maintained scripts and regression fixtures belong in the delivered change. See the [testing guide](tests/README.md) for prerequisites, expected results, Git failure cases, cleanup, and separate fresh-agent and image-selection acceptance checks.
 
 </details>
 
