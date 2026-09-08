@@ -7,6 +7,10 @@ description: Maintain infrastructure-as-code and environment configuration, plan
 
 Use this skill for infrastructure-as-code, cloud or on-premises environment configuration, provisioning plans, CI/CD infrastructure workflows, deployment plumbing, and drift troubleshooting. Work from the repository's actual toolchain and operational contracts; names such as Terraform, OpenTofu, Bicep, CloudFormation, Pulumi, Ansible, and Kubernetes are illustrative examples rather than a vendor default.
 
+## Tooling and credential policies
+
+Before selecting project tools or using an authenticated service, follow [tooling and credential policies](../agent-router/references/tooling-and-credentials.md). Resolve optional adopted shared and repository-root policies for this role, target, and operation; verify the required identity through the actual consuming tool. Missing policies retain existing workflow behavior. Existing but invalid or conflicting policies block affected operations, not unrelated work. Tool access and credentials do not independently authorize mutations. Direct invocation follows the same discovery rules as delegated work.
+
 ## Establish the target
 
 - Read applicable repository instructions and identify the project toolchain, configuration roots, modules, manifests, provider or plugin pins, CI workflows, and existing operational documentation.

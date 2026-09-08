@@ -7,6 +7,10 @@ description: Analyze existing system boundaries, interfaces, dependencies, data 
 
 Use this skill when a request involves system design, cross-cutting behavior, component boundaries, public contracts, dependency decisions, or migration strategy. Produce implementation-ready guidance grounded in the current repository rather than a generic redesign.
 
+## Tooling and credential policies
+
+Before selecting project tools or using an authenticated service, follow [tooling and credential policies](../agent-router/references/tooling-and-credentials.md). Resolve optional adopted shared and repository-root policies for this role, target, and operation; verify the required identity through the actual consuming tool. Missing policies retain existing workflow behavior. Existing but invalid or conflicting policies block affected operations, not unrelated work. Tool access and credentials do not independently authorize mutations. Direct invocation follows the same discovery rules as delegated work.
+
 ## Build the current-state model
 
 - Read applicable repository instructions and inspect the relevant entry points, modules, configuration, schemas, tests, and operational documentation.

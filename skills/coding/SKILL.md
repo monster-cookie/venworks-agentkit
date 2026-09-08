@@ -7,6 +7,10 @@ description: Implement, debug, refactor, build, and validate bounded software ch
 
 Use this skill when the requested outcome requires changing application code, scripts, configuration, tests, or build behavior. The deliverable is a working, reviewable change whose behavior matches the request and the repository's existing contracts.
 
+## Tooling and credential policies
+
+Before selecting project tools or using an authenticated service, follow [tooling and credential policies](../agent-router/references/tooling-and-credentials.md). Resolve optional adopted shared and repository-root policies for this role, target, and operation; verify the required identity through the actual consuming tool. Missing policies retain existing workflow behavior. Existing but invalid or conflicting policies block affected operations, not unrelated work. Tool access and credentials do not independently authorize mutations. Direct invocation follows the same discovery rules as delegated work.
+
 ## Establish the change
 
 - Read every applicable `AGENTS.md` and repository context file before editing, including instructions inherited from parent directories.

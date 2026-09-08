@@ -17,6 +17,7 @@ AgentKit gives Codex a set of specialist roles, shared instructions, and reusabl
 - **Infrastructure-as-code support** through `tech-ops`, using your project's existing tools to maintain configuration, prepare changes, investigate drift, and verify authorized operations.
 - **Art and 3D work within feature delivery**, using the skills and tools available in your setup to create assets, keep editable source files, and check exports in the project where possible.
 - **Diagrams for architecture, technical documentation, and PRs**, with Mermaid Markdown for structure and flows and optional [PR Lens](https://github.com/coldteadotai/pr-lens) visuals when available. See the [diagram and PR guidance](skills/agent-router/references/diagrams-and-prs.md).
+- **Optional tooling and credential policies** for shared defaults, repository-specific tools, named service accounts, and scoped operational permissions.
 - **One installer for setup and updates**, with previews, backups, and checks before replacing files you have changed.
 
 ## Before you start
@@ -79,6 +80,21 @@ For infrastructure work, ask the coordinator to use `tech-ops`. For example: "Up
 The prompts are text you copy and paste, not automatically added menu items or slash commands. A copy is also installed in your Codex `prompts` folder.
 
 The workflow asks for reviews that fit the assignment. **Adversarial review—a deeper attempt to find hidden failures—is reserved for major new features, newly introduced frameworks or libraries, or an explicit request.** Routine fixes and documentation changes do not automatically need it. Security review is off by default. You can explicitly request it for any project; ordinary workflow prompts do not start it automatically. AgentKit uses its own local reviewer; it does not automatically launch the separate Codex Security scan product or require Daybreak access. The instructions also ask assistants to preserve useful progress and report unfinished or unverified work honestly.
+
+## Choose tools and service accounts
+
+AgentKit can follow shared defaults and repository-specific policies. Use a tooling policy to choose tools for each specialist and a credential policy when a tool must use a named account. These files guide the agents; they do not configure a connector, create permissions, or log in automatically.
+
+| Location | Applies to |
+| --- | --- |
+| `tooling-policy.md` and `credential-policy.md` in your Codex home | Shared defaults across projects. Your Codex home is normally your user `.codex` folder, or the location set by `CODEX_HOME`. |
+| `.codex/tooling-policy.md` and `.codex/credential-policy.md` at a repository root | Overrides for that repository. Nested policy folders are not loaded. |
+
+Start with the [policy guide and four examples](skills/agent-router/references/tooling-and-credentials.md#adopt-the-examples). Copy only the examples you need into the locations above, replace the placeholders, and tell the agent to use those policies for the project or shared setup. The guide's adoption section explains the required fields. Repository entries replace matching shared entries in full; entries with other IDs remain available. Policies are optional, so existing projects keep their current workflow when the files are absent.
+
+For example, define a shared GitHub identity for your automation account, reference its password-manager card, and require GitHub tools to verify that account before acting. A repository can separately tell tech-ops which infrastructure tool and development workspace to use, and whether plans are already authorized. Credential files contain references and verification instructions, never passwords or tokens. Keep private account or vault details in your local shared policy when they should not be published.
+
+The installer distributes sanitized examples inside the router skill. It leaves active policy files alone and does not configure accounts, password managers, or tooling. An unavailable required tool, wrong account, or unclear permission stops the affected operation while other useful work can continue. A policy naming a service account does not switch an existing connector to that account; account setup and verification remain explicit steps.
 
 ## Update AgentKit
 
