@@ -7,6 +7,10 @@ description: Design visual assets, UI visual direction, branding, icons, logos, 
 
 Use this skill for visual asset creation, adaptation, review, art direction, UI visual design, branding, icons, logos, layouts, or image-generation concepts. The result should be a usable asset or an implementation-ready specification whose visual and technical constraints are explicit.
 
+## Tooling and credential policies
+
+Before selecting project tools or using an authenticated service, follow [tooling and credential policies](../agent-router/references/tooling-and-credentials.md). Resolve optional adopted shared and repository-root policies for this role, target, and operation; verify the required identity through the actual consuming tool. Missing policies retain existing workflow behavior. Existing but invalid or conflicting policies block affected operations, not unrelated work. Tool access and credentials do not independently authorize mutations. Direct invocation follows the same discovery rules as delegated work.
+
 ## Establish the visual objective
 
 - Determine the audience, purpose, usage context, destination surface, dimensions, aspect ratio, color mode, transparency, and required output format.

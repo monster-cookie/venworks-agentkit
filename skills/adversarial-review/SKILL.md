@@ -9,6 +9,10 @@ Use this skill only for major new features, introduction of a new framework or l
 
 Follow-up review should address corrections affecting the qualifying feature or integration. Later documentation/changelog edits or unrelated routine changes do not restart this stage.
 
+## Tooling and credential policies
+
+Before selecting project tools or using an authenticated service, follow [tooling and credential policies](../agent-router/references/tooling-and-credentials.md). Resolve optional adopted shared and repository-root policies for this role, target, and operation; verify the required identity through the actual consuming tool. Missing policies retain existing workflow behavior. Existing but invalid or conflicting policies block affected operations, not unrelated work. Tool access and credentials do not independently authorize mutations. Direct invocation follows the same discovery rules as delegated work.
+
 ## Define what should hold
 
 - Read the request, applicable repository instructions, changed code, adjacent consumers, and existing tests.

@@ -7,6 +7,10 @@ description: Gather repository and authoritative external evidence for technical
 
 Use this skill when a conclusion depends on repository reconnaissance, current technical facts, version-specific behavior, dependency compatibility, source comparison, or an external specification. The deliverable is evidence that lets another agent make a defensible decision.
 
+## Tooling and credential policies
+
+Before selecting project tools or using an authenticated service, follow [tooling and credential policies](../agent-router/references/tooling-and-credentials.md). Resolve optional adopted shared and repository-root policies for this role, target, and operation; verify the required identity through the actual consuming tool. Missing policies retain existing workflow behavior. Existing but invalid or conflicting policies block affected operations, not unrelated work. Tool access and credentials do not independently authorize mutations. Direct invocation follows the same discovery rules as delegated work.
+
 ## Frame the question
 
 - Restate the exact question, scope, target versions, environment, and decision the research must support.

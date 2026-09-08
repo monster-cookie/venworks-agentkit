@@ -11,6 +11,10 @@ AgentKit's `security-review` is a local, read-only specialist using its matching
 
 For an eligible requested review, evaluate whether an attacker or genuinely untrusted input can obtain capabilities, data, or access they should not have; do not label every crash or malformed local input a vulnerability.
 
+## Tooling and credential policies
+
+Before selecting project tools or using an authenticated service, follow [tooling and credential policies](../agent-router/references/tooling-and-credentials.md). Resolve optional adopted shared and repository-root policies for this role, target, and operation; verify the required identity through the actual consuming tool. Missing policies retain existing workflow behavior. Existing but invalid or conflicting policies block affected operations, not unrelated work. Tool access and credentials do not independently authorize mutations. Direct invocation follows the same discovery rules as delegated work.
+
 ## Establish the threat model
 
 - Read applicable repository instructions and identify assets, trust boundaries, principals, attacker capabilities, deployment context, and security-relevant assumptions.

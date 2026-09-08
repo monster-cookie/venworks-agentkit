@@ -1,0 +1,33 @@
+# Shared tooling policy example
+
+This inert example is a shared default for `$CODEX_HOME/tooling-policy.md`. Replace every `replace-with-*` value and review the allowed operations before adopting it. Examples document the policy contract; they do not activate runtime behavior.
+
+Before using policy-defined credentials or standing grants, require a matching user-approved adoption baseline for the policy bytes, checkout and concrete targets, and reviewed execution evidence for any credential-bearing command or verification probe. Do not execute changed repository wrappers with credentials or proceed through an unverified named Git transport.
+
+Policy-Version: 1
+
+## Tool: github
+
+| Field | Value |
+| --- | --- |
+| Service | github |
+| Roles | all |
+| Requirement | preferred |
+| Tool | replace-with-approved-github-integration |
+| Identity | github-automation |
+| Target | repository's configured GitHub remote |
+| Operations | task-scoped; use only for operations explicitly authorized by the current task |
+| Fallbacks | none |
+
+## Tool: plane
+
+| Field | Value |
+| --- | --- |
+| Service | plane |
+| Roles | all |
+| Requirement | preferred |
+| Tool | replace-with-approved-plane-integration |
+| Identity | plane-automation |
+| Target | repository's configured Plane workspace |
+| Operations | task-scoped; use only for operations explicitly authorized by the current task |
+| Fallbacks | none |

@@ -7,6 +7,10 @@ description: Plan, create, inspect, or modify 3D assets, Blender scenes, meshes,
 
 Use this skill for planning, creating, inspecting, or modifying Blender scenes, meshes, materials, UVs, textures, rigs, game-ready models, and related 3D assets. Determine the destination and its asset contract before making modeling or export decisions.
 
+## Tooling and credential policies
+
+Before selecting project tools or using an authenticated service, follow [tooling and credential policies](../agent-router/references/tooling-and-credentials.md). Resolve optional adopted shared and repository-root policies for this role, target, and operation; verify the required identity through the actual consuming tool. Missing policies retain existing workflow behavior. Existing but invalid or conflicting policies block affected operations, not unrelated work. Tool access and credentials do not independently authorize mutations. Direct invocation follows the same discovery rules as delegated work.
+
 ## Establish the destination contract
 
 - Identify the destination engine or application, target platform, import path, coordinate system, units, scale, axis orientation, and required export format.

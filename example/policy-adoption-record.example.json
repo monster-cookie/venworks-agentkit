@@ -1,0 +1,84 @@
+{
+  "record_version": 1,
+  "adoptions": [
+    {
+      "id": "replace-with-adoption-id",
+      "approval_reference": "replace-with-user-approval-reference-for-this-exact-snapshot",
+      "codex_home": "C:\\Users\\replace-with-user\\.codex",
+      "repository_root": "C:\\path\\to\\replace-with-repository",
+      "policy_files": [
+        {
+          "slot": "shared-tooling",
+          "path": "C:\\Users\\replace-with-user\\.codex\\tooling-policy.md",
+          "resolved_path": "C:\\Users\\replace-with-user\\.codex\\tooling-policy.md",
+          "state": "present",
+          "sha256": "replace-with-raw-byte-sha256"
+        },
+        {
+          "slot": "shared-credentials",
+          "path": "C:\\Users\\replace-with-user\\.codex\\credential-policy.md",
+          "resolved_path": "C:\\Users\\replace-with-user\\.codex\\credential-policy.md",
+          "state": "present",
+          "sha256": "replace-with-raw-byte-sha256"
+        },
+        {
+          "slot": "repository-tooling",
+          "path": "C:\\path\\to\\replace-with-repository\\.codex\\tooling-policy.md",
+          "resolved_path": "C:\\path\\to\\replace-with-repository\\.codex\\tooling-policy.md",
+          "state": "present",
+          "sha256": "replace-with-raw-byte-sha256"
+        },
+        {
+          "slot": "repository-credentials",
+          "path": "C:\\path\\to\\replace-with-repository\\.codex\\credential-policy.md",
+          "resolved_path": null,
+          "state": "absent",
+          "sha256": null
+        }
+      ],
+      "targets": {
+        "github:repository": "replace-with-github-owner-and-repository",
+        "plane:workspace": "replace-with-plane-workspace",
+        "infrastructure:development": {
+          "account": "replace-with-development-account",
+          "region": "replace-with-region",
+          "workspace": "replace-with-development-workspace",
+          "backend": "replace-with-state-backend"
+        },
+        "diagrams:repository-docs": "replace-with-repository-markdown-document-scope"
+      },
+      "executions": [
+        {
+          "tool_id": "github",
+          "identity_id": "github-automation",
+          "approval_reference": "replace-with-user-approval-reference-for-this-execution",
+          "resolved_executable": "C:\\path\\to\\replace-with-reviewed-github-integration",
+          "invocation_context_constraints": "replace-with-isolated-process-or-dedicated-integration-context",
+          "credential_destinations": [
+            "replace-with-protected-github-credential-destination"
+          ],
+          "file_closure": [
+            {
+              "role": "wrapper-or-launcher",
+              "resolved_path": "C:\\path\\to\\replace-with-reviewed-wrapper",
+              "sha256": "replace-with-raw-byte-sha256"
+            },
+            {
+              "role": "configuration-or-input",
+              "resolved_path": "C:\\path\\to\\replace-with-reviewed-configuration",
+              "sha256": "replace-with-raw-byte-sha256"
+            }
+          ],
+          "allowed_arguments": [
+            "replace-with-reviewed-non-secret-argument-pattern"
+          ],
+          "working_directory": "C:\\path\\to\\replace-with-repository",
+          "non_secret_environment_controls": [
+            "replace-with-reviewed-process-scoped-environment-control"
+          ],
+          "executable_dependency_versions_or_integrity": "replace-with-supported-executable-and-dependency-integrity-evidence"
+        }
+      ]
+    }
+  ]
+}

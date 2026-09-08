@@ -7,6 +7,10 @@ description: Perform an independent read-only review for correctness, regression
 
 Use this skill for an independent review of a working tree, commit, branch, pull request, patch, or proposed implementation. Judge the behavior against the request and the repository's contracts; do not turn the review into a style rewrite.
 
+## Tooling and credential policies
+
+Before selecting project tools or using an authenticated service, follow [tooling and credential policies](../agent-router/references/tooling-and-credentials.md). Resolve optional adopted shared and repository-root policies for this role, target, and operation; verify the required identity through the actual consuming tool. Missing policies retain existing workflow behavior. Existing but invalid or conflicting policies block affected operations, not unrelated work. Tool access and credentials do not independently authorize mutations. Direct invocation follows the same discovery rules as delegated work.
+
 ## Review the change
 
 - Read applicable repository instructions, the change description, and the relevant surrounding code before judging a diff.
