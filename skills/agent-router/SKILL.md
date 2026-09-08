@@ -233,7 +233,7 @@ Every spawned task should include:
 - Scope: exact files, module, subsystem, or question when known
 - Context: only what the agent needs
 - Constraints: what must not change
-- Effective policy: source paths and revision evidence, selected tool/identity IDs, target, operation authorization, allowed fallback, and unresolved gaps; pass only relevant non-secret details and preserve the worker's own scope restrictions
+- Effective policy: source paths, matching adoption-record ID and policy hashes/absence states, reviewed execution references, selected tool/identity IDs, target, operation authorization, allowed fallback, and unresolved gaps; pass only relevant non-secret details and preserve the worker's own scope restrictions
 - Deliverable: what the agent must return or implement
 - Acceptance criteria: how success will be judged
 - Progress contract: useful milestones, authorized checkpoint location or message channel, current operation, remaining scope, and explicit user deadlines/budgets if any

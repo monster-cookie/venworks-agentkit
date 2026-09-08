@@ -2,6 +2,8 @@
 
 This inert example overrides the shared `github-automation` identity and adds `dev-infrastructure` in `.codex/credential-policy.md`. Replace every `replace-with-*` value and verify the effective identity before adopting it. A repository override replaces the entire same-ID entry, so every field is repeated here; fields are not merged with the shared entry. Never put a password, token, recovery code, or other secret in this file.
 
+Before using policy-defined credentials or standing grants, require a matching user-approved adoption baseline for the policy bytes, checkout and concrete targets, and reviewed execution evidence for any credential-bearing command or verification probe. Do not execute changed repository wrappers with credentials or proceed through an unverified named Git transport.
+
 Policy-Version: 1
 
 ## Identity: github-automation
