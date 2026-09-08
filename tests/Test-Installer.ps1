@@ -19,7 +19,7 @@ function New-Package {
     param([string]$Name)
     $destination = Join-Path $testRoot $Name
     New-Item -ItemType Directory -Path $destination -Force | Out-Null
-    foreach ($name in @('agents', 'skills', 'prompts', 'tools', 'Config-Settings.toml.example', 'VERSION')) {
+    foreach ($name in @('agents', 'skills', 'prompts', 'tools', 'example', 'Config-Settings.toml.example', 'VERSION')) {
         $source = Join-Path $repository $name
         if (Test-Path -LiteralPath $source) { Copy-Item -LiteralPath $source -Destination (Join-Path $destination $name) -Recurse }
     }
@@ -270,6 +270,14 @@ try {
 $results.Add('Locked-file write failure preserved/restored previous payload.')
 
 $policyPackage = New-Package 'policy-package'
+$legacyPolicyPackage = New-Package 'legacy-policy-package'
+$legacyExamples = Join-Path $legacyPolicyPackage 'skills/agent-router/references/policies'
+New-Item -ItemType Directory -Path $legacyExamples -Force | Out-Null
+foreach ($example in Get-ChildItem -LiteralPath (Join-Path $legacyPolicyPackage 'example') -Filter '*.example.md' -File) {
+    Copy-Item -LiteralPath $example.FullName -Destination (Join-Path $legacyExamples $example.Name)
+}
+Assert-True (-not (Test-Path -LiteralPath (Join-Path $fresh 'example'))) 'Default install copied the example directory'
+Assert-True (-not (Test-Path -LiteralPath (Join-Path $fresh 'skills/agent-router/references/policies'))) 'Default install copied policy templates into skill references'
 foreach ($policyName in @('tooling-policy.md', 'credential-policy.md')) {
     Assert-True (-not (Test-Path -LiteralPath (Join-Path $fresh $policyName))) 'Default install activated a policy example'
 }
@@ -280,18 +288,22 @@ foreach ($policyHome in $policyHomes) {
         [IO.File]::WriteAllText((Join-Path $policyHome $policyName), "User-owned policy: $policyName`r`nPreserve these exact bytes.")
     }
     $policyBefore = Get-TreeState $policyHome
-    Invoke-Install $policyPackage $policyHome
-    Assert-Payload $policyPackage $policyHome
+    Invoke-Install $legacyPolicyPackage $policyHome
+    Assert-Payload $legacyPolicyPackage $policyHome
     $policyAfter = @(Get-ChildItem -LiteralPath $policyHome -File | Sort-Object FullName | ForEach-Object { $_.Name + ':' + (Get-FileHash -LiteralPath $_.FullName).Hash }) -join "`n"
     Assert-True ($policyBefore -ceq $policyAfter) 'Fresh install changed active policies'
 }
-$policyExample = Join-Path $policyPackage 'skills/agent-router/references/policies/shared-tooling-policy.example.md'
+$policyExample = Join-Path $policyPackage 'example/shared-tooling-policy.example.md'
 Assert-True (Test-Path -LiteralPath $policyExample) 'Missing policy example in package'
 Add-Content -LiteralPath $policyExample -Value 'Synthetic example upgrade'
 foreach ($policyHome in $policyHomes) {
     $policyBefore = @(Get-ChildItem -LiteralPath $policyHome -File | Sort-Object FullName | ForEach-Object { $_.Name + ':' + (Get-FileHash -LiteralPath $_.FullName).Hash }) -join "`n"
     Invoke-Install $policyPackage $policyHome -Options @('-Force')
     Assert-Payload $policyPackage $policyHome
+    Assert-True (-not (Test-Path -LiteralPath (Join-Path $policyHome 'example'))) 'Update copied setup examples into Codex'
+    foreach ($example in Get-ChildItem -LiteralPath (Join-Path $policyPackage 'example') -Filter '*.example.md' -File) {
+        Assert-True (-not (Test-Path -LiteralPath (Join-Path $policyHome ('skills/agent-router/references/policies/' + $example.Name)))) 'Update retained an unchanged formerly managed template'
+    }
     $policyAfter = @(Get-ChildItem -LiteralPath $policyHome -File | Sort-Object FullName | ForEach-Object { $_.Name + ':' + (Get-FileHash -LiteralPath $_.FullName).Hash }) -join "`n"
     Assert-True ($policyBefore -ceq $policyAfter) 'Example upgrade changed active policies'
     $installedManifest = Get-Content -LiteralPath (Join-Path $policyHome '.venworks-agentkit/manifest.json') -Raw | ConvertFrom-Json
@@ -300,7 +312,7 @@ foreach ($policyHome in $policyHomes) {
     Invoke-Install $policyPackage $policyHome
     Assert-True ($policyState -ceq (Get-TreeState $policyHome)) 'Policy fixture repeat was not a no-op'
 }
-$results.Add('Policy examples install and upgrade while active shared/project policy bytes remain unmanaged and unchanged; repeat is a no-op.')
+$results.Add('Setup examples stay uninstalled, unchanged legacy templates retire, active shared/project policies remain unmanaged and unchanged, and repeat is a no-op.')
 
 $results | ForEach-Object { Write-Output "PASS: $_" }
 Write-Output "Artifacts: $testRoot"

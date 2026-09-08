@@ -92,9 +92,9 @@ On interruption, preserve non-secret selection and outcome evidence using the sh
 
 ## Adopt the examples
 
-The [shared tooling](policies/shared-tooling-policy.example.md), [shared credentials](policies/shared-credential-policy.example.md), [repository tooling](policies/repository-tooling-policy.example.md), and [repository credential override](policies/repository-credential-policy.example.md) examples are inert templates. Replace placeholders, remove irrelevant entries, verify tool capabilities and identity checks, and explicitly adopt the resulting files at the discovery locations. Credential policy is optional when no selected tool needs a named identity.
+Policy templates and their setup README live in the AgentKit repository's top-level `example/` directory, outside the installed skill tree. They are setup material, not policy inputs. Do not discover or load templates during normal policy resolution; use only the exact active locations listed above. Consult setup material only when the user requests policy setup or example editing.
 
-The installer distributes examples as skill references. It never copies them into active policy locations, provisions credentials, edits repository instructions, or installs the named tools. Existing user-authored policies remain outside its managed payload. If policies must also apply without AgentKit skills loaded, propose an `AGENTS.md` instruction to read them; do not edit `AGENTS.md` or `AGENT-REPO-CONTEXT.md` directly.
+The installer does not install the `example/` directory, activate templates, provision credentials, edit repository instructions, or install named tools. Existing user-authored policies remain outside its managed payload. Credential policy is optional when no selected tool needs a named identity. If policies must also apply without AgentKit skills loaded, propose an `AGENTS.md` instruction to read the adopted policies; do not edit `AGENTS.md` or `AGENT-REPO-CONTEXT.md` directly.
 
 For persistent adoption across tasks, the user can add an instruction to the applicable shared or repository `AGENTS.md`. This is a proposed snippet for manual adoption, not an instruction for AgentKit to edit that file:
 

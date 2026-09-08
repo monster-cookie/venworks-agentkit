@@ -25,4 +25,4 @@ The installer copies agents, skills, and this prompt folder into the selected Co
 
 ## Project tooling and identities
 
-Before running a selected template, the router and specialists follow the [optional tooling and credential policies](../skills/agent-router/references/tooling-and-credentials.md). Shared defaults can name your GitHub or Plane automation identity; repository entries can select role-specific tools and targets. Task restrictions still apply, including read-only review and report-only release-readiness scopes. Installing examples does not activate them or authenticate a tool.
+Before running a selected template, the router and specialists follow the [optional tooling and credential policies](../skills/agent-router/references/tooling-and-credentials.md). Shared defaults can name your GitHub or Plane automation identity; repository entries can select role-specific tools and targets. Task restrictions still apply, including read-only review and report-only release-readiness scopes. Setup templates live in the repository's top-level example/ directory and are not installed into Codex; copying a template does not adopt it or authenticate a tool.
