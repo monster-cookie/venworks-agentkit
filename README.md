@@ -74,7 +74,7 @@ For art or 3D modeling, choose the [full feature delivery prompt](prompts/01-ful
 
 The prompts are text you copy and paste, not automatically added menu items or slash commands. A copy is also installed in your Codex `prompts` folder.
 
-The workflow asks for reviews that fit the assignment. **Adversarial review—a deeper attempt to find hidden failures—is reserved for major new features, newly introduced frameworks or libraries, or an explicit request.** Routine fixes and documentation changes do not automatically need it. The instructions also ask assistants to preserve useful progress and report unfinished or unverified work honestly.
+The workflow asks for reviews that fit the assignment. **Adversarial review—a deeper attempt to find hidden failures—is reserved for major new features, newly introduced frameworks or libraries, or an explicit request.** Routine fixes and documentation changes do not automatically need it. Security review is off by default. You can explicitly request it for any project; ordinary workflow prompts do not start it automatically. AgentKit uses its own local reviewer; it does not automatically launch the separate Codex Security scan product or require Daybreak access. The instructions also ask assistants to preserve useful progress and report unfinished or unverified work honestly.
 
 ## Update AgentKit
 
@@ -148,7 +148,7 @@ The included specialists use these settings. The *reasoning* column is the model
 | 3D modeling | GPT-6 Astra | xhigh |
 | Code review | GPT-6 Astra | high |
 | Adversarial review | GPT-6 Astra | xhigh |
-| Security review | GPT-6 Astra | high |
+| Security review (opt-in) | GPT-6 Astra | high |
 | Research | GPT-5.6 Luna | max |
 | Technical documentation | GPT-5.6 Luna | max |
 | User documentation | GPT-6 Astra | high |

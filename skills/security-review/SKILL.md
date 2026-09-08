@@ -1,11 +1,15 @@
 ---
 name: security-review
-description: Assess realistic attack paths across untrusted input, authentication, authorization, secrets, privilege boundaries, execution, filesystem access, and sensitive data flows.
+description: Perform an explicitly requested local security review of project code. Not an automatic workflow stage or a Codex Security scan.
 ---
 
 # Security Review
 
-Use this skill only when the application has a meaningful security or trust boundary. Evaluate whether an attacker or genuinely untrusted input can obtain capabilities, data, or access they should not have; do not label every crash or malformed local input a vulnerability.
+Use this skill only when the user explicitly requests a security review. It is available for any project. Skip it during ordinary workflow stages that do not explicitly request security review. A trust boundary, serious finding, or request for general code review does not activate this skill.
+
+AgentKit's `security-review` is a local, read-only specialist using its matching skill. Do not load `codex-security:*` skills, call Codex Security access/preflight/scan tools, or launch a Codex Security scan as part of this assignment. A request for a security review does not request that separate product. Only an explicit user request for a Codex Security product scan starts that separate workflow, which must follow its own access requirements. Do not treat Daybreak, Cyber, TAC access, or scan preflight as prerequisites for this local review, and do not automatically escalate findings to that product.
+
+For an eligible requested review, evaluate whether an attacker or genuinely untrusted input can obtain capabilities, data, or access they should not have; do not label every crash or malformed local input a vulnerability.
 
 ## Establish the threat model
 

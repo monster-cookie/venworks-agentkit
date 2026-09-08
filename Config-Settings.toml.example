@@ -8,7 +8,6 @@ service_tier = "default"
 
 [features]
 memories = true
-context_management = true
 context_management.experimental_mode = true
 multi_agent = true
 multi_agent_v2 = true

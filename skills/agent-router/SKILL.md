@@ -1,6 +1,6 @@
 ---
 name: agent-router
-description: Route non-trivial Codex work to specialized subagents for implementation, architecture, graphic design, 3D modeling, research, technical documentation, end-user documentation, marketing/platform documentation, normal code review, adversarial logic review, and focused security review. Use when a task spans multiple stages, benefits from independent review, or the user asks for agents, delegation, orchestration, or subagents.
+description: Route non-trivial Codex work to specialized subagents for implementation, architecture, graphic design, 3D modeling, research, technical documentation, end-user documentation, marketing/platform documentation, normal code review, adversarial logic review, and explicitly requested security review. Use when a task spans multiple stages, benefits from independent review, or the user asks for agents, delegation, orchestration, or subagents.
 ---
 
 # Agent Router
@@ -158,22 +158,13 @@ When that condition is met, use `adversarial-review` for deep logic challenge:
 - negative tests
 - attempts to falsify the implementation
 
-Use `security-review` only when a meaningful security or trust boundary exists:
+### Security review is opt-in
 
-- untrusted external input
-- network communication
-- authentication or authorization
-- secrets, credentials, or tokens
-- process or command execution
-- privilege boundaries
-- filesystem access outside controlled roots
-- unsafe deserialization
-- externally supplied executable/plugin content
-- sensitive information exposure
+Do not add a security-review stage to ordinary delivery, fixes, reviews, documentation, marketing, release readiness, or recovery. Within AgentKit, `security-review` is available for any project, but runs only when the user explicitly requests a security review. A network, filesystem, plugin, or other trust boundary does not request a review by itself.
 
-Do not invoke `security-review` merely because code can crash, consume memory, overflow a local buffer, process malformed game data, or fail under ordinary local input unless that creates a credible security boundary for the real application.
+AgentKit's `security-review` is a local, read-only specialist using its matching skill. Do not load `codex-security:*` skills, call Codex Security access/preflight/scan tools, or launch a Codex Security scan as part of this assignment. A request for a security review does not request that separate product. Only an explicit user request for a Codex Security product scan starts that separate workflow, which must follow its own access requirements. Do not treat Daybreak, Cyber, TAC access, or scan preflight as prerequisites for this local review, and do not automatically escalate findings to that product.
 
-For serious security findings or high-risk security work, recommend escalation to Codex Security mode / Cyber when available.
+Report an evident defect encountered during already-authorized work within that work's scope. Its presence does not start another review stage or a scan.
 
 ## Review Responsibilities
 
@@ -198,8 +189,7 @@ For substantial software changes, use only the stages that materially apply:
 4. coding
 5. code-review
 6. adversarial-review, only for major new features, a new framework/library, or an explicit user request
-7. security-review, only when a real security boundary exists
-8. the appropriate documentation specialist when behavior or public information changed
+7. the appropriate documentation specialist when behavior or public information changed
 
 Dependent stages must run in order.
 
