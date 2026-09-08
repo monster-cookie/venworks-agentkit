@@ -1,8 +1,8 @@
 # Venworks AgentKit
 
-A ready-made Codex workflow for planning, coding, art, 3D modeling, research, reviews, and documentation.
+A ready-made Codex workflow for planning, coding, infrastructure operations, art, 3D modeling, research, reviews, and documentation.
 
-AgentKit gives Codex a set of specialist roles, shared instructions, and reusable task prompts. You describe the work, and the coordinator chooses the help it needs. The prompts can also read requirements from a Plane work item, so you do not have to copy everything into your task.
+AgentKit gives Codex a set of specialist roles, shared instructions, and reusable task prompts. You describe the work, and the coordinator chooses the help it needs. The workflow adapts to your project's tools and conventions, whether you are building an application, managing infrastructure, creating assets, or writing documentation. The prompts can also read requirements from a Plane work item, so you do not have to copy everything into your task.
 
 **Your existing Codex settings stay yours.** Installing or updating AgentKit does not replace your existing configuration, connections, or model preferences.
 
@@ -11,10 +11,12 @@ AgentKit gives Codex a set of specialist roles, shared instructions, and reusabl
 
 ## What you get
 
-- **Eleven specialists** for coding, architecture, graphic design and art, 3D modeling, research, code review, deeper review, security review, technical documentation, user guides, and marketing copy.
-- **Twelve shared instruction sets**, called skills, that explain how the coordinator and specialists should work.
+- **Twelve specialists** for coding, infrastructure operations, architecture, graphic design and art, 3D modeling, research, code review, deeper review, security review, technical documentation, user guides, and marketing copy.
+- **Thirteen shared instruction sets**, called skills, that explain how the coordinator and specialists should work.
 - **Eight ready-to-use prompts** for new features, bug fixes, reviews, release preparation, documentation, marketing, and resuming unfinished work.
+- **Infrastructure-as-code support** through `tech-ops`, using your project's existing tools to maintain configuration, prepare changes, investigate drift, and verify authorized operations.
 - **Art and 3D work within feature delivery**, using the skills and tools available in your setup to create assets, keep editable source files, and check exports in the project where possible.
+- **Diagrams for architecture, technical documentation, and PRs**, with Mermaid Markdown for structure and flows and optional [PR Lens](https://github.com/coldteadotai/pr-lens) visuals when available. See the [diagram and PR guidance](skills/agent-router/references/diagrams-and-prs.md).
 - **One installer for setup and updates**, with previews, backups, and checks before replacing files you have changed.
 
 ## Before you start
@@ -71,6 +73,8 @@ For a more structured assignment, open the [prompt guide](prompts/README.md), ch
 The templates accept a Plane work-item ID or link. Codex needs access to Plane to read it. If you are not using Plane, replace the work-item input and the instruction to retrieve it with your own description of the task.
 
 For art or 3D modeling, choose the [full feature delivery prompt](prompts/01-full-feature-delivery.md) and fill in its `Art/3D requirements` field. Describe what you need and include references, file formats, dimensions, or scale when you know them. The workflow asks Codex to agree on those details, keep editable originals, and check that exported assets work in the intended project when the necessary tools are available. The included `graphic-design` and `3d-modeling` specialists each have a matching skill and use the creative tools available in your setup. Codex should tell you when a required tool or check is unavailable.
+
+For infrastructure work, ask the coordinator to use `tech-ops`. For example: "Update this project's infrastructure configuration and prepare a plan for review; do not apply it." The specialist uses the project's existing tools, such as Terraform, OpenTofu, Bicep, CloudFormation, Pulumi, Ansible, or Kubernetes tooling. It checks the target environment and reports separately what was edited, validated, and actually applied. Installing AgentKit does not install those tools or configure cloud credentials.
 
 The prompts are text you copy and paste, not automatically added menu items or slash commands. A copy is also installed in your Codex `prompts` folder.
 
@@ -143,6 +147,7 @@ The included specialists use these settings. The *reasoning* column is the model
 | Specialist | Model | Reasoning |
 | --- | --- | --- |
 | Coding | GPT-5.6 Sol | xhigh |
+| Tech ops / infrastructure as code | GPT-5.6 Sol | xhigh |
 | Software architecture | GPT-6 Astra | high |
 | Graphic design and art | GPT-6 Astra | xhigh |
 | 3D modeling | GPT-6 Astra | xhigh |

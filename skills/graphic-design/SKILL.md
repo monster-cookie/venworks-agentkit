@@ -16,7 +16,7 @@ Use this skill for visual asset creation, adaptation, review, art direction, UI 
 
 ## Design the direction
 
-- Maintain visual consistency when extending an existing product, mod, or brand. Reuse established visual language before introducing a new style.
+- Maintain visual consistency when extending an existing product, service, or brand. Reuse established visual language before introducing a new style.
 - Consider hierarchy, typography, spacing, contrast, composition, balance, legibility, accessibility, and recognition at the smallest required size.
 - Choose shapes, color, type, imagery, and effects that support the audience and usage context rather than decoration alone.
 - For application or game assets, account for the actual platform constraints: supported dimensions, file format, alpha behavior, scaling, performance, and integration surface.

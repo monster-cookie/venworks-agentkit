@@ -5,7 +5,7 @@ description: Write clear end-user documentation for installation, usage, feature
 
 # User Documentation
 
-Use this skill for readers who need to install, use, update, troubleshoot, or understand a product, tool, mod, or feature without knowing the codebase. Describe the observable behavior and the action the reader needs to take.
+Use this skill for readers who need to install, use, update, troubleshoot, or understand a product, service, tool, or feature without knowing the codebase. Describe the observable behavior and the action the reader needs to take.
 
 ## Establish the user task
 

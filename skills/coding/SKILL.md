@@ -51,6 +51,10 @@ Use this skill when the requested outcome requires changing application code, sc
 
 Return a concise summary of the behavior changed, modified files, validation performed, and remaining risks or decisions. Include exact commands or test names when they make the result reproducible.
 
+## Pull-request handoff
+
+When preparing or creating a PR, follow [diagram and pull-request guidance](../agent-router/references/diagrams-and-prs.md): include a relevant Mermaid diagram for structural or behavioral flows and use PR Lens when available and appropriate. Keep the description and visuals aligned with the final change and actual validation. PR creation requires task authorization; create only ready-for-review PRs.
+
 ## Progress and recovery
 
 For delegated work or a long-running operation, read [task progress, interruption, and recovery](../agent-router/references/task-lifecycle.md); loading it does not require further delegation. At useful milestones, report completed work, the current operation, remaining scope, actual verification, and blockers. Preserve checkpoints only within authorized paths or return them in a message when read-only.

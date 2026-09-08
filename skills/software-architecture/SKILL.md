@@ -14,6 +14,12 @@ Use this skill when a request involves system design, cross-cutting behavior, co
 - Record confirmed facts with file and symbol references. Mark inferences, missing evidence, and proposed behavior separately.
 - Identify the contract that callers, stored data, external systems, operators, and users rely on. Include compatibility assumptions and version boundaries.
 
+## Architecture diagrams
+
+Include Mermaid diagrams in fenced `mermaid` Markdown blocks when describing component relationships, data flow, lifecycle, or interaction ordering. Choose a flowchart for structure, a sequence diagram for calls and ordering, or a state diagram for lifecycle. Show current and proposed behavior separately when the distinction matters. Keep labels grounded in actual components and explain the diagram in adjacent prose.
+
+Follow [diagram and pull-request guidance](../agent-router/references/diagrams-and-prs.md). Return diagram source in the handoff when read-only; write documentation only within delegated scope.
+
 ## Evaluate the change
 
 - Translate the requirement into affected responsibilities and invariants before proposing a design.

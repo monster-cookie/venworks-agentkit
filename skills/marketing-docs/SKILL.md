@@ -1,11 +1,11 @@
 ---
 name: marketing-docs
-description: Create accurate public-facing product and mod-page copy for announcements, descriptions, release posts, Nexus BBCode, and Bethesda Creations restricted Markdown.
+description: Create accurate public-facing marketing copy for websites, product and service descriptions, announcements, release posts, and publishing channels.
 ---
 
 # Marketing and Platform Documentation
 
-Use this skill for public copy whose job is to explain value, set expectations, and help players or customers decide what to do next. Match the channel's supported format and audience instead of carrying internal engineering language into the publication.
+Use this skill for public copy whose job is to explain value, set expectations, and help its audience decide what to do next. Match the channel's supported format and audience instead of carrying internal engineering language into the publication.
 
 ## Establish the message
 
@@ -16,8 +16,8 @@ Use this skill for public copy whose job is to explain value, set expectations, 
 ## Write for the target platform
 
 - Lead with the user-visible benefit, then give the details needed to understand installation, compatibility, requirements, limitations, or next steps.
-- For Nexus, use only supported Nexus BBCode and preserve balanced tags, valid links, images, lists, emphasis, quotes, and code blocks. Do not invent tags or convert to Markdown unless requested.
-- For Bethesda Creations, use only syntax known to work in the project's target restricted Markdown dialect. Do not assume full CommonMark or GitHub-Flavored Markdown support; use safe plain text when support is uncertain.
+- Use the requested channel's supported format and verify platform restrictions before converting content. Do not assume every website, store, or publishing platform accepts the same markup.
+- Only for a request targeting Nexus Mods or Bethesda Creations, read [optional platform formatting guidance](references/platform-formats.md). Those channels are not defaults for other projects.
 - When converting formats, preserve meaning, links, emphasis, lists, images, code, and ordering where the target supports them. Do not rewrite accurate wording merely to change markup.
 - Keep internal task tracking, build details, architecture, probes, pipelines, model memory, and implementation jargon out of public copy unless the reader genuinely needs a user-facing explanation.
 
