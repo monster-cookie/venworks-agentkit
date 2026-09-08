@@ -26,7 +26,8 @@ Use this skill for infrastructure-as-code, cloud or on-premises environment conf
 ## Plan and validate
 
 - Use the repository's configured formatter, validation, lint, type, policy, and plan commands when available; do not invent a replacement toolchain.
-- A plan or read operation may contact providers, refresh remote state, and acquire a state lock. Scope it to the identified target and report those side effects before treating it as a harmless local check.
+- Local edits and validation alone do not authorize provider-backed planning. An already-authorized plan for an identified target includes the provider/backend reads and normal transient plan-lock acquisition and release required by that operation, without repetitive approval. Explicit task restrictions, including a prohibition on remote mutations, still apply; clarify a conflict before acquiring a remote lock. Plan authorization does not include apply, import, persistent state updates or migrations, destroy, force-unlock, or unrelated external-record updates.
+- Distinguish refreshing provider observations for a plan from persisting refreshed state. Inspect the actual configured command and workflow for additional side effects; the word "plan" does not authorize them. Report provider access and locking separately from local validation. Preserve existing locks; normal plan authorization never permits force-unlock.
 - Distinguish clearly between a proposed plan and an applied change. A successful plan does not prove that resources changed, and a successful command does not prove the target reached the desired state.
 - Check dependency ordering, replacements, destructive actions, drift, missing variables, provider version changes, and output sensitivity in the plan or validation result.
 - Validate generated configuration and plan artifacts without committing secrets or machine-specific state. Keep temporary artifacts in the repository-local `.work` directory when practical.

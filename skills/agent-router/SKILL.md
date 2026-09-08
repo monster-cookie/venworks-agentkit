@@ -83,7 +83,7 @@ Use `tech-ops` for:
 - infrastructure delivery pipelines, environment configuration, and state/backend handling
 - executing an authorized infrastructure change and verifying its outcome
 
-Use the project's existing infrastructure tools and target environment. Coordinate with `software-architecture` for material design decisions and `coding` for application code. The task's authorization determines whether work ends at a reviewable plan or includes live changes; infrastructure work does not automatically authorize applying, destroying, or migrating resources.
+Use the project's existing infrastructure tools and target environment. Coordinate with `software-architecture` for material design decisions and `coding` for application code. Local edits and validation alone do not authorize provider-backed planning. An already-authorized plan for an identified target includes the provider/backend reads and normal transient plan-lock acquisition and release required by that operation, without repetitive approval. Explicit task restrictions, including a prohibition on remote mutations, still apply; clarify a conflict before acquiring a remote lock. Plan authorization does not include apply, import, persistent state updates or migrations, destroy, force-unlock, or unrelated external-record updates.
 
 Use `software-architecture` for:
 
