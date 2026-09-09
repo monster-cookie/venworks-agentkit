@@ -271,6 +271,8 @@ $results.Add('Locked-file write failure preserved/restored previous payload.')
 
 $policyPackage = New-Package 'policy-package'
 $legacyPolicyPackage = New-Package 'legacy-policy-package'
+$legacyAdoptionGuide = 'skills/agent-router/references/policy-adoption.md'
+[IO.File]::WriteAllText((Join-Path $legacyPolicyPackage $legacyAdoptionGuide), 'Legacy managed adoption-record procedure.')
 $legacyExamples = Join-Path $legacyPolicyPackage 'skills/agent-router/references/policies'
 New-Item -ItemType Directory -Path $legacyExamples -Force | Out-Null
 foreach ($example in Get-ChildItem -LiteralPath (Join-Path $legacyPolicyPackage 'example') -Filter '*.example.md' -File) {
@@ -278,6 +280,8 @@ foreach ($example in Get-ChildItem -LiteralPath (Join-Path $legacyPolicyPackage 
 }
 Assert-True (-not (Test-Path -LiteralPath (Join-Path $fresh 'example'))) 'Default install copied the example directory'
 Assert-True (-not (Test-Path -LiteralPath (Join-Path $fresh 'skills/agent-router/references/policies'))) 'Default install copied policy templates into skill references'
+Assert-True (-not (Test-Path -LiteralPath (Join-Path $fresh $legacyAdoptionGuide))) 'Default install included the retired adoption-record procedure'
+# Legacy user-owned records remain untouched even though the policy workflow no longer uses them.
 foreach ($policyName in @('tooling-policy.md', 'credential-policy.md', 'policy-adoptions.json')) {
     Assert-True (-not (Test-Path -LiteralPath (Join-Path $fresh $policyName))) 'Default install activated a policy example'
 }
@@ -290,6 +294,7 @@ foreach ($policyHome in $policyHomes) {
     $policyBefore = Get-TreeState $policyHome
     Invoke-Install $legacyPolicyPackage $policyHome
     Assert-Payload $legacyPolicyPackage $policyHome
+    Assert-True (Test-Path -LiteralPath (Join-Path $policyHome $legacyAdoptionGuide)) 'Legacy fixture did not install the adoption-record procedure'
     $policyAfter = @(Get-ChildItem -LiteralPath $policyHome -File | Sort-Object FullName | ForEach-Object { $_.Name + ':' + (Get-FileHash -LiteralPath $_.FullName).Hash }) -join "`n"
     Assert-True ($policyBefore -ceq $policyAfter) 'Fresh install changed active policies'
 }
@@ -301,6 +306,7 @@ foreach ($policyHome in $policyHomes) {
     Invoke-Install $policyPackage $policyHome -Options @('-Force')
     Assert-Payload $policyPackage $policyHome
     Assert-True (-not (Test-Path -LiteralPath (Join-Path $policyHome 'example'))) 'Update copied setup examples into Codex'
+    Assert-True (-not (Test-Path -LiteralPath (Join-Path $policyHome $legacyAdoptionGuide))) 'Update retained the obsolete managed adoption-record procedure'
     foreach ($example in Get-ChildItem -LiteralPath (Join-Path $policyPackage 'example') -Filter '*.example.md' -File) {
         Assert-True (-not (Test-Path -LiteralPath (Join-Path $policyHome ('skills/agent-router/references/policies/' + $example.Name)))) 'Update retained an unchanged formerly managed template'
     }
@@ -312,7 +318,7 @@ foreach ($policyHome in $policyHomes) {
     Invoke-Install $policyPackage $policyHome
     Assert-True ($policyState -ceq (Get-TreeState $policyHome)) 'Policy fixture repeat was not a no-op'
 }
-$results.Add('Setup examples stay uninstalled, unchanged legacy templates retire, active shared/project policies remain unmanaged and unchanged, and repeat is a no-op.')
+$results.Add('Setup examples stay uninstalled, obsolete managed policy guidance retires, user-owned policies and legacy records remain unchanged, and repeat is a no-op.')
 
 $results | ForEach-Object { Write-Output "PASS: $_" }
 Write-Output "Artifacts: $testRoot"

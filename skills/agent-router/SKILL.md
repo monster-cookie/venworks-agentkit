@@ -11,7 +11,7 @@ Never select reasoning above `xhigh`, except `gpt-5.6-luna` may use `max`. Never
 
 ## Tooling and credential policies
 
-Before selecting project tools or using an authenticated service, follow [tooling and credential policies](references/tooling-and-credentials.md). Resolve optional adopted shared and repository-root policies for this role, target, and operation; verify the required identity through the actual consuming tool. Missing policies retain existing workflow behavior. Existing but invalid or conflicting policies block affected operations, not unrelated work. Tool access and credentials do not independently authorize mutations. Direct invocation follows the same discovery rules as delegated work.
+Before selecting project tools or using an authenticated service, follow [tooling and credential policies](references/tooling-and-credentials.md). Resolve optional configured shared and repository-root policies for this role, target, and operation; verify the required identity through the actual consuming tool. Missing policies retain existing workflow behavior. Existing but invalid or conflicting policies block affected operations, not unrelated work. Tool access and credentials do not independently authorize mutations. Direct invocation follows the same discovery rules as delegated work.
 
 ## Goal
 
@@ -241,7 +241,7 @@ Every spawned task should include:
 - Scope: exact files, module, subsystem, or question when known
 - Context: only what the agent needs
 - Constraints: what must not change
-- Effective policy: source paths, matching adoption-record ID and policy hashes/absence states, reviewed execution references, selected tool/identity IDs, target, operation authorization, allowed fallback, and unresolved gaps; pass only relevant non-secret details and preserve the worker's own scope restrictions
+- Effective policy: source paths, selected tool/identity IDs, concrete target, existing task or user authorization, account-verification results, allowed fallback, and unresolved gaps; pass only relevant non-secret details and preserve the worker's own scope restrictions. Do not require an adoption record, policy hashes, or a stored execution manifest.
 - Deliverable: what the agent must return or implement
 - Acceptance criteria: how success will be judged
 - Progress contract: useful milestones, authorized checkpoint location or message channel, current operation, remaining scope, and explicit user deadlines/budgets if any
