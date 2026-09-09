@@ -21,6 +21,8 @@ flowchart TD
 
 ## Prepare the CLI and a dedicated session
 
+Before using Proton Pass, obtain the expected PAT/agent name from the selected policy's `Authentication` metadata or the user's explicit setup instructions. The supplied examples use `replace-with-proton-agent-name` as a placeholder. This is the manager session identity to compare with the PAT name reported by `pass-cli info`; the policy's `Expected identity` remains the downstream GitHub, Plane, or infrastructure account. Do not infer the expected name from the current session or the service account. Missing, unfinished, or conflicting manager-identity input defers only Proton-dependent credential access, not work using an already-verified consuming session.
+
 1. Run `pass-cli --version`. If the executable is unavailable, check its installed location and PATH before following Proton's [platform installation instructions](https://protonpass.github.io/pass-cli/get-started/installation/) within the task's setup scope. AgentKit's installer does not install the CLI.
 2. Before any session inspection, login, or logout, select a directory dedicated to this task and worker. Reuse a directory only when its ownership and expected agent identity are established. Never log out the user's default session to prepare an agent session.
 3. Run `pass-cli info` in that context. If successful, verify the expected PAT/agent identity; a PAT session reports a token name rather than a user email. Do not treat an unrelated personal session as the requested agent session. If the directory is new and has no session, proceed to the PAT login below. Diagnose other failures before changing authentication state.
@@ -73,22 +75,43 @@ Proton's [agent command reference](https://protonpass.github.io/pass-cli/command
 
 ## Retrieve and supply a credential
 
-Policy references contain identifiers, such as `pass://replace-with-share-id/replace-with-item-id/replace-with-field`, or an explicit vault name, item title, and field. Confirm the destination and consuming command before access. Retrieve only the required field using the [item command](https://protonpass.github.io/pass-cli/commands/item/); these are syntax examples whose secret output must be captured directly into a protected consumer, never displayed in a tool result:
-
-```text
-pass-cli item view --vault-name "replace-with-vault-name" --item-title "replace-with-item-title" --field "replace-with-field"
-pass-cli item view "pass://replace-with-share-id/replace-with-item-id" --field "replace-with-field"
-```
+Policy references contain identifiers, such as `pass://replace-with-share-id/replace-with-item-id/replace-with-field`, or an explicit vault name, item title, and field. Confirm the destination and consuming command before access. An `item view` field read prints the credential to stdout, so do not run it as a standalone terminal-tool command. Use the protected `run` workflow below for consumers that accept environment credentials. For another consumer, establish a supported direct credential-transfer channel before reading anything; do not retrieve a secret into model-visible output while figuring out how to supply it.
 
 Prefer [pass-cli run](https://protonpass.github.io/pass-cli/commands/contents/run/) when the consuming tool supports environment credentials. It resolves `pass://` references in environment variables and passes the values to its child process. Keep its default masking enabled. Use a dedicated environment containing only the authorized references: `run` also scans inherited variables, so an env file alone does not isolate unrelated references. Inspect the consumer's relevant behavior and output first; masking does not make an environment dump or a credential-logging command appropriate.
 
-For example, after session verification and setting the access reason, a dedicated process with only the intended reference can use this pattern when GitHub CLI is the approved consumer:
+For example, after verifying the expected Proton session and setting the access reason, use this PowerShell 7 example on Windows when GitHub CLI is the approved consumer. It starts `pass-cli run` with an explicitly cleared child environment, adds only reviewed platform paths, session metadata, and the single intended item reference, and addresses both executables by their resolved paths. The login PAT and unrelated inherited `pass://` references are excluded even if they remain in the parent login process. Review the selected executables and replace the item reference before use; never copy the whole parent environment to make a missing setting work.
 
 ```powershell
-$env:GH_TOKEN = 'pass://replace-with-share-id/replace-with-item-id/replace-with-field'
-pass-cli run -- gh api user --jq .login
-if ($LASTEXITCODE -ne 0) { throw 'GitHub identity verification failed; inspect the sanitized diagnostic.' }
+$passPath = (Get-Command pass-cli -CommandType Application -ErrorAction Stop).Source
+$consumerPath = (Get-Command gh -CommandType Application -ErrorAction Stop).Source
+if (-not $env:PROTON_PASS_SESSION_DIR -or -not $env:PROTON_PASS_AGENT_REASON) {
+    throw 'Verify the dedicated session and set the access reason first.'
+}
+$startInfo = [Diagnostics.ProcessStartInfo]::new($passPath)
+$startInfo.UseShellExecute = $false
+$startInfo.CreateNoWindow = $true
+$startInfo.Environment.Clear()
+foreach ($name in @('SystemRoot', 'WINDIR', 'USERPROFILE', 'APPDATA', 'LOCALAPPDATA', 'TEMP', 'TMP', 'PROTON_PASS_SESSION_DIR', 'PROTON_PASS_AGENT_REASON')) {
+    $value = [Environment]::GetEnvironmentVariable($name, 'Process')
+    if ($value) {
+        if ($value -match 'pass://') { throw 'Unexpected secret reference in a platform path or session metadata.' }
+        $startInfo.Environment[$name] = $value
+    }
+}
+$startInfo.Environment['GH_TOKEN'] = 'pass://replace-with-share-id/replace-with-item-id/replace-with-field'
+foreach ($argument in @('run', '--', $consumerPath, 'api', 'user', '--jq', '.login')) {
+    $startInfo.ArgumentList.Add($argument)
+}
+$process = [Diagnostics.Process]::Start($startInfo)
+try {
+    $process.WaitForExit()
+    if ($process.ExitCode -ne 0) { throw 'GitHub identity verification failed; inspect the sanitized diagnostic.' }
+} finally {
+    $process.Dispose()
+}
 ```
+
+This example uses the existing verified session and does not perform login. If reauthentication is needed, do it separately in the dedicated login context, verify `info`, then rebuild this cleared child environment. For other platforms or consumers, use the same explicit environment allowlist and supported platform paths; add proxy or other settings only when needed, reviewed, and free of unrelated credentials or item references. The environment boundary limits inheritance; it does not sandbox a consumer from other files or processes accessible to the same user.
 
 Compare the returned login with the policy's expected GitHub account, then use the same verified credential context for the authorized operation. Other tools require their own supported credential channel and identity check. A successful Proton Pass login proves access to the credential manager, not the identity of GitHub, Plane, a cloud provider, a connector, or a separate Git transport. Reading an item does not reauthenticate an existing connector. If the available tool cannot transfer credentials without exposing them or cannot verify the intended identity, defer only that operation.
 
