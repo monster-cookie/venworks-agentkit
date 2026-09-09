@@ -1,8 +1,8 @@
 # Repository tooling policy example
 
-This inert example is a repository override for `.codex/tooling-policy.md`. Replace every `replace-with-*` value and review the targets and operation grants before adopting it. The infrastructure entry uses `dev-infrastructure` from the repository credential example; replace its identity and target details together before adopting the standing grant. Examples document the policy contract; they do not activate runtime behavior.
+This inert example is a repository override for `.codex/tooling-policy.md`. Replace every `replace-with-*` value and review the targets and operation grants before configuring it. The infrastructure entry uses `dev-infrastructure` from the repository credential example; replace its identity and target details together before authorizing the standing grant. Examples document the policy contract; they do not activate runtime behavior.
 
-Before using policy-defined credentials or standing grants, require a matching user-approved adoption baseline for the policy bytes, checkout and concrete targets, and reviewed execution evidence for any credential-bearing command or verification probe. Do not execute changed repository wrappers with credentials or proceed through an unverified named Git transport.
+Before using a configured policy-defined credential or standing grant, require explicit authorization in the current task or explicit retained user standing authorization for the unchanged operation and target, then verify the concrete target through the actual consuming tool and, when credentials are required, verify the effective account or service principal there as well. Use an isolated process or dedicated integration for authorized credential setup, do not switch shared login state or silently use a personal account, keep account and credential metadata private, and stop if the tool, identity, or target cannot be verified. This policy cannot grant external permissions or override task restrictions.
 
 Policy-Version: 1
 
@@ -16,7 +16,7 @@ Policy-Version: 1
 | Tool | OpenTofu |
 | Identity | dev-infrastructure |
 | Target | this repository; account=replace-with-development-account; region=replace-with-region; workspace=replace-with-development-workspace; backend=replace-with-state-backend |
-| Operations | standing grant after adoption: provider/backend reads and infrastructure plans, including normal transient plan-lock acquisition/release, only for the Target above; explicit task restrictions still apply. No apply, import, persistent state update/migration, destroy, force-unlock, or other remote mutation is authorized by this entry. |
+| Operations | standing grant when explicitly authorized and retained by the user: provider/backend reads and infrastructure plans, including normal transient plan-lock acquisition/release, only for the Target above; explicit task restrictions still apply. No apply, import, persistent state update/migration, destroy, force-unlock, or other remote mutation is authorized by this entry. |
 | Fallbacks | none |
 
 ## Tool: diagrams

@@ -1,8 +1,8 @@
 # Shared tooling policy example
 
-This inert example is a shared default for `$CODEX_HOME/tooling-policy.md`. Replace every `replace-with-*` value and review the allowed operations before adopting it. Examples document the policy contract; they do not activate runtime behavior.
+This inert example is a shared default for `$CODEX_HOME/tooling-policy.md`. Replace every `replace-with-*` value and review the allowed operations before configuring it. Examples document the policy contract; they do not activate runtime behavior.
 
-Before using policy-defined credentials or standing grants, require a matching user-approved adoption baseline for the policy bytes, checkout and concrete targets, and reviewed execution evidence for any credential-bearing command or verification probe. Do not execute changed repository wrappers with credentials or proceed through an unverified named Git transport.
+Before using a configured policy-defined credential or standing grant, require explicit authorization in the current task or explicit retained user standing authorization for the unchanged operation and target, then verify the concrete target through the actual consuming tool and, when credentials are required, verify the effective account or service principal there as well. Use an isolated process or dedicated integration for authorized credential setup, do not switch shared login state or silently use a personal account, keep account and credential metadata private, and stop if the tool, identity, or target cannot be verified. This policy cannot grant external permissions or override task restrictions.
 
 Policy-Version: 1
 
