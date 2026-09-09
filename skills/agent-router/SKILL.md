@@ -13,6 +13,8 @@ Never select reasoning above `xhigh`, except `gpt-5.6-luna` may use `max`. Never
 
 Before selecting project tools or using an authenticated service, follow [tooling and credential policies](references/tooling-and-credentials.md). Resolve optional configured shared and repository-root policies for this role, target, and operation; verify the required identity through the actual consuming tool. Missing policies retain existing workflow behavior. Existing but invalid or conflicting policies block affected operations, not unrelated work. Tool access and credentials do not independently authorize mutations. Direct invocation follows the same discovery rules as delegated work.
 
+When the user or selected credential policy specifies Proton Pass, load [Proton Pass CLI for agents](references/proton-pass.md) for `pass-cli` session isolation, PAT login, access reasons, credential retrieval, and recovery. Load it only when that manager is needed and pass the reference to workers performing the credential operation.
+
 ## Goal
 
 Use the root agent as the orchestrator and integrator.

@@ -1,8 +1,8 @@
 # Policy examples
 
-These files are inert templates for optional AgentKit tooling and credential policies. Read the [tooling and credential policy guide](../skills/agent-router/references/tooling-and-credentials.md) before configuring one; do not use this directory as a live policy location.
+These files are inert templates for optional AgentKit tooling and credential policies. Read the [tooling and credential policy guide](../skills/agent-router/references/tooling-and-credentials.md) and the [Proton Pass and `pass-cli` reference](../skills/agent-router/references/proton-pass.md) before configuring a credential policy; do not use this directory as a live policy location.
 
-The installer excludes this directory and leaves your configured policy files untouched.
+The installer excludes this directory, leaves your configured policy files untouched, and does not install or configure Proton Pass or `pass-cli`.
 
 ## Choose a destination
 
@@ -19,9 +19,10 @@ Copy only the examples you need, then place the reviewed result at the matching 
 
 1. Replace every `replace-with-*` placeholder with a reviewed value, remove irrelevant entries, and confirm each tool, target, operation, and fallback is supported by the environment.
 2. Treat a repository entry with the same ID as a whole-entry replacement of the shared entry; repeat every required field and do not merge targets, identities, permissions, or fallback lists across files.
-3. Keep credential policies limited to non-secret manager and vault/card/field references. Never add passwords, tokens, recovery codes, or other secret values to a policy or commit them to the repository.
+3. Keep credential policies limited to non-secret Proton Pass item and field references. Never add passwords, tokens, recovery codes, or other secret values to a policy or commit them to the repository.
 4. Use a configured policy only when the current task explicitly authorizes the operation or the user has explicitly retained standing authorization for that unchanged operation and target. A template's presence in this directory, a checkout, or a pull request is not authorization.
-5. Verify the concrete target through the actual consuming tool before the authorized operation; when credentials are required, verify the expected account or service principal through that tool and authenticated session as well. A credential-card reference does not reauthenticate a connector; reuse an already-correct context only after verification, use an isolated process or dedicated integration when authorized setup is needed, and do not switch shared login state or silently use a personal account.
+5. Verify the concrete target through the actual consuming tool before the authorized operation; when credentials are required, verify the expected account or service principal through that tool and authenticated session as well. A Proton Pass item or field reference does not reauthenticate a connector; reuse an already-correct consuming session only after verification, or supply the Proton Pass PAT through `PROTON_PASS_PERSONAL_ACCESS_TOKEN` to a dedicated isolated `pass-cli` process with `PROTON_PASS_AGENT_REASON` set and use `pass-cli run` for direct protected injection of the required service credential into the consuming process. Never expose the Proton Pass PAT or retrieved service credential to command arguments, logs, files, or model-visible output, and do not switch shared login state or silently use a personal account.
+6. When using Proton Pass, replace `replace-with-proton-agent-name` in each applicable Authentication field with the nonsecret PAT name supplied in the same applicable policy or by explicit user-provided setup input; keep it separate from Expected identity, which names the downstream consumer account or principal. Before credential access, require `pass-cli info` to report a matching PAT name; never infer the expected name from the observed session. If the effective input is missing, unfinished, or conflicting, defer only the dependent credential access; a healthy verified consuming session remains usable.
 
 A policy file cannot grant external permissions, create credentials, select an account without verification, or override current-task restrictions and higher-priority permissions. Keep account and credential metadata private, including in reports and examples. If the tool, effective identity, or target cannot be verified, stop the affected operation while unrelated credential-free work can continue.
 
