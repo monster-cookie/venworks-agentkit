@@ -12,9 +12,9 @@ Policy-Version: 1
 | --- | --- |
 | Service | github |
 | Expected identity | replace-with-repository-github-service-account |
-| Manager | replace-with-repository-password-manager |
-| Reference | vault=replace-with-repository-vault; card=replace-with-repository-github-card; field=replace-with-repository-credential-field |
-| Authentication | Reuse an already-correct authenticated GitHub context after verifying its identity. When authorized setup is needed, supply the credential through the approved password-manager integration to an isolated process or dedicated GitHub integration for this repository identity; do not switch shared login state. |
+| Manager | Proton Pass via Proton Pass CLI (`pass-cli`) |
+| Reference | pass://replace-with-share-id/replace-with-item-id/replace-with-field |
+| Authentication | Reuse an already-correct authenticated GitHub context after verifying its identity. If authorized setup is needed, supply the Proton Pass PAT only to a dedicated isolated Proton Pass CLI (`pass-cli`) process through `PROTON_PASS_PERSONAL_ACCESS_TOKEN`, set `PROTON_PASS_AGENT_REASON`, and use `pass-cli run` to inject the required service credential directly into the consuming process. Never expose the Proton Pass PAT or retrieved service credential in command arguments, logs, files, or model-visible output. Verify the same-tool GitHub identity and target before acting; do not switch shared login state. |
 | Verification | Confirm through the same authenticated GitHub session that the provider-reported account matches Expected identity before the authorized operation; stop on a mismatch. |
 | Fallback | none |
 
@@ -24,8 +24,8 @@ Policy-Version: 1
 | --- | --- |
 | Service | infrastructure |
 | Expected identity | replace-with-development-principal in replace-with-development-account |
-| Manager | replace-with-approved-password-manager-or-managed-auth-source |
-| Reference | replace-with-development-vault-card-field-or-managed-connection-reference |
-| Authentication | Reuse a verified development context when available. If authorized setup is needed, use the configured provider's supported protected credential channel in an isolated process or dedicated context; do not use an ambient personal profile or switch shared login state. |
+| Manager | Proton Pass via Proton Pass CLI (`pass-cli`) |
+| Reference | pass://replace-with-share-id/replace-with-item-id/replace-with-field |
+| Authentication | Reuse a verified development context when available. If authorized setup is needed, supply the Proton Pass PAT only to a dedicated isolated Proton Pass CLI (`pass-cli`) process through `PROTON_PASS_PERSONAL_ACCESS_TOKEN`, set `PROTON_PASS_AGENT_REASON`, and use `pass-cli run` to inject the required service credential directly into the consuming OpenTofu process. Never expose the Proton Pass PAT or retrieved service credential in command arguments, logs, files, or model-visible output. Do not use an ambient personal profile or switch shared login state. |
 | Verification | Use the configured provider's supported account/principal check in the same credential context consumed by OpenTofu; compare the principal and account with Expected identity and the tooling Target. Verify any separate backend identity before accessing that backend; stop if an identity cannot be established or the backend requires an additional undeclared credential. |
 | Fallback | none |
