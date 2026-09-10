@@ -9,7 +9,7 @@ flowchart TD
     Task[Authorized operation] --> Consumer{Consuming identity already verified?}
     Consumer -->|Yes| Use[Use that context]
     Consumer -->|No| Session[Select dedicated Proton Pass session]
-    Session --> Check[Check info and expected agent identity]
+    Session --> Check[Check info and session health]
     Check -->|New or expired session| Login[Login using PAT environment]
     Login --> Check
     Check -->|Verified| Read[Set reason and retrieve required field]
@@ -21,12 +21,12 @@ flowchart TD
 
 ## Prepare the CLI and a dedicated session
 
-Before using Proton Pass, obtain the expected PAT/agent name from the selected policy's `Authentication` metadata or the user's explicit setup instructions. The supplied examples use `replace-with-proton-agent-name` as a placeholder. This is the manager session identity to compare with the PAT name reported by `pass-cli info`; the policy's `Expected identity` remains the downstream GitHub, Plane, or infrastructure account. Do not infer the expected name from the current session or the service account. Missing, unfinished, or conflicting manager-identity input defers only Proton-dependent credential access, not work using an already-verified consuming session.
+Before using Proton Pass, use the protected `PROTON_PASS_PERSONAL_ACCESS_TOKEN` environment variable supplied by the user's existing local setup when a dedicated session needs login. This bootstrap PAT is not stored in Proton Pass and must never be represented as a policy item or `pass://` reference; doing so would create a circular dependency. The policy's `Expected identity` remains the downstream GitHub, Plane, or infrastructure account. A token/agent name is optional metadata: compare the name reported by `pass-cli info` only when the user explicitly supplied an expected nonsecret name. Never infer a required name from the current session or the service account.
 
 1. Run `pass-cli --version`. If the executable is unavailable, check its installed location and PATH before following Proton's [platform installation instructions](https://protonpass.github.io/pass-cli/get-started/installation/) within the task's setup scope. AgentKit's installer does not install the CLI.
-2. Before any session inspection, login, or logout, select a directory dedicated to this task and worker. Reuse a directory only when its ownership and expected agent identity are established. Never log out the user's default session to prepare an agent session.
-3. Run `pass-cli info` in that context. If successful, verify the expected PAT/agent identity; a PAT session reports a token name rather than a user email. Do not treat an unrelated personal session as the requested agent session. If the directory is new and has no session, proceed to the PAT login below. Diagnose other failures before changing authentication state.
-4. For required login, confirm `PROTON_PASS_PERSONAL_ACCESS_TOKEN` is present without printing its value, then run `pass-cli login`. Check its exit code and run `pass-cli info` again to verify the expected session. If the PAT is unavailable or rejected, defer the dependent credential operation; do not silently switch to interactive account login or create another token.
+2. Before any session inspection, login, or logout, select a directory dedicated to this task and worker. Reuse a directory only when its ownership and purpose are established. Never log out the user's default session to prepare an agent session.
+3. Run `pass-cli info` in that context. If successful, verify that the dedicated session is healthy; a PAT session may report a token name rather than a user email. If an expected token name was explicitly supplied, compare it, but do not require one that is absent from policy or setup instructions. Do not treat an unrelated personal session as the requested dedicated session. If the directory is new and has no session, proceed to the PAT login below. Diagnose other failures before changing authentication state.
+4. For required login, confirm `PROTON_PASS_PERSONAL_ACCESS_TOKEN` is present without printing its value, then run `pass-cli login`. Check its exit code and run `pass-cli info` again to verify the dedicated session. If the PAT is unavailable or rejected, defer the dependent credential operation; do not silently switch to interactive account login or create another token.
 
 In a dedicated PowerShell process, create the session path once and retain it for subsequent commands:
 
@@ -44,7 +44,7 @@ Use a private OS temporary location for authentication state even when ordinary 
 
 ## Check health and recover deliberately
 
-Before each authenticated command, run `pass-cli info`, check its exit code, and confirm the expected session. This preflight does not recursively apply to `info`, local version/help commands, or the login/logout commands needed to restore a failed session. Recheck after interruptions and during long tasks; Proton documents PAT sessions as lasting two hours in its [login reference](https://protonpass.github.io/pass-cli/commands/login/#personal-access-token-login).
+Before each authenticated command, run `pass-cli info`, check its exit code, and confirm the dedicated session is healthy. If an expected token name was explicitly supplied, compare it as part of that check. This preflight does not recursively apply to `info`, local version/help commands, or the login/logout commands needed to restore a failed session. Recheck after interruptions and during long tasks; Proton documents PAT sessions as lasting two hours in its [login reference](https://protonpass.github.io/pass-cli/commands/login/#personal-access-token-login).
 
 On failure, inspect the full diagnostic and exit code through a channel that does not expose secrets. An authentication error can require recovery; permission denial, a missing item, bad arguments, and connection failures require their own diagnosis. A nonzero exit code alone is not a reason to log out. Use `pass-cli test` after a successful preflight when a connection-health check is needed.
 
@@ -79,7 +79,7 @@ Policy references contain identifiers, such as `pass://replace-with-share-id/rep
 
 Prefer [pass-cli run](https://protonpass.github.io/pass-cli/commands/contents/run/) when the consuming tool supports environment credentials. It resolves `pass://` references in environment variables and passes the values to its child process. Keep its default masking enabled. Use a dedicated environment containing only the authorized references: `run` also scans inherited variables, so an env file alone does not isolate unrelated references. Inspect the consumer's relevant behavior and output first; masking does not make an environment dump or a credential-logging command appropriate.
 
-For example, after verifying the expected Proton session and setting the access reason, use this PowerShell 7 example on Windows when GitHub CLI is the approved consumer. It starts `pass-cli run` with an explicitly cleared child environment, adds only reviewed platform paths, session metadata, and the single intended item reference, and addresses both executables by their resolved paths. The login PAT and unrelated inherited `pass://` references are excluded even if they remain in the parent login process. Review the selected executables and replace the item reference before use; never copy the whole parent environment to make a missing setting work.
+For example, after verifying the dedicated Proton session and setting the access reason, use this PowerShell 7 example on Windows when GitHub CLI is the approved consumer. It starts `pass-cli run` with an explicitly cleared child environment, adds only reviewed platform paths, session metadata, and the single intended item reference, and addresses both executables by their resolved paths. The login PAT and unrelated inherited `pass://` references are excluded even if they remain in the parent login process. Review the selected executables and replace the item reference before use; never copy the whole parent environment to make a missing setting work.
 
 ```powershell
 $passPath = (Get-Command pass-cli -CommandType Application -ErrorAction Stop).Source
