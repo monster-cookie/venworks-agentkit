@@ -10,6 +10,16 @@ At meaningful milestones, preserve completed work and report the current operati
 
 Checkpoints do not expand write permissions. A read-only worker returns its checkpoint in a message; the coordinator may save it only to an authorized location. Do not write memory, source, temporary fixtures, or external records merely because checkpointing would be convenient. Exclude credentials and unnecessary private data.
 
+## Maintain convergence
+
+For coordinated work, keep a compact ledger of the critical path, current milestone, prerequisite checkpoint, active agents, cumulative assignments, ownership, follow-up count, integrated deliverables, and repeated verification. Before adding work, identify why its result is needed now and which completed prerequisite makes it executable. Available concurrency is capacity, not a task-generation target; five or six active specialists can be healthy when their work is independent and ownership-safe.
+
+Prefer continuing a suitable existing agent over creating an equivalent replacement. One correction handoff for a finding or acceptance item is normal. If the same finding, failure, or substantially equivalent assignment returns again without a changed diagnosis or new evidence, reassess the plan before another assignment. Freeze scope expansion when agent creation does not reduce the current milestone, downstream work is advancing ahead of an unmet prerequisite, or broad checks repeat without a relevant source, input, failure, or risk change.
+
+When the user questions agent count, sequencing, scope, looping, or progress, stop spawning new work. Inspect and report active versus cumulative agents, current ownership, completed deliverables, the unmet prerequisite, and the corrected critical path before continuing. Do not cancel healthy existing work unless the user asks or another authorized stopping reason applies.
+
+Do not invent token, elapsed-time, context-compaction, or agent-count deadlines. Enforce explicit user budgets and platform limits, but use evidence of repeated or misordered work—not resource consumption alone—to diagnose a coordination loop.
+
 ## Observe before intervening
 
 Separate the coordinator's wait timeout from a tool-operation timeout, an explicit worker error, and a user-imposed deadline. A wait returning without a final answer is an observation boundary, not a task failure. Tool timeouts may leave a process running or an external action completed; inspect their actual semantics and outcome.

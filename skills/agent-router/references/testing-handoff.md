@@ -8,6 +8,8 @@ The implementing specialist drafts the checks from the requirements and actual f
 
 Prepare checks while implementing, then refresh the handoff after the final fixes, documentation changes, or relevant snapshot changes. Tie any recorded result to the revision, dirty working-tree state, artifact, or environment actually checked. If recovery or subsequent changes make a result stale, label it and rerun only the affected checks when authorized.
 
+During an active milestone, prefer focused checks for the behavior being changed. Run a broad integrated suite once at the milestone boundary when the project requires it. Do not repeat an already-passing broad check unless affected source or inputs changed, an earlier check failed, or a reviewer identified a concrete uncovered interaction or risk. The coordinator consolidates overlapping checks from specialists and records which result already covers each requirement; additional agents or repeated commands are not evidence by themselves.
+
 ## Required content
 
 Include enough concrete detail for a reader who did not follow the task:

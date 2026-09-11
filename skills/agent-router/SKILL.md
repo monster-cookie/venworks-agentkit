@@ -27,21 +27,21 @@ Use this workflow across software, infrastructure, creative, and documentation p
 
 Packaged starting defaults (the root setting is only in the optional example config; preserve the user's existing root model and effort):
 
-- root/orchestrator: `gpt-6-astra` with `low`
-- coding: `gpt-5.6-sol` with `high`
-- tech-ops: `gpt-5.6-sol` with `high`
+- root/orchestrator: `gpt-5.6-sol` with `xhigh`
+- coding: `gpt-5.6-sol` with `xhigh`
+- tech-ops: `gpt-5.6-sol` with `xhigh`
 - software-architecture: `gpt-6-astra` with `medium`
-- graphic-design: `gpt-6-astra` with `low`
+- graphic-design: `gpt-6-astra` with `medium`
 - 3d-modeling: `gpt-6-astra` with `high`
-- code-review: `gpt-6-astra` with `medium`
-- adversarial-review: `gpt-6-astra` with `high`
-- security-review: `gpt-6-astra` with `medium`
-- research: `gpt-5.6-luna` with `high`
-- technical-docs: `gpt-5.6-luna` with `high`
+- code-review: `gpt-5.6-sol` with `xhigh`
+- adversarial-review: `gpt-6-astra` with `low`
+- security-review: `gpt-5.6-sol` with `xhigh`
+- research: `gpt-6-astra` with `low`
+- technical-docs: `gpt-5.6-luna` with `max`
 - user-docs: `gpt-6-astra` with `low`
-- marketing-docs: `gpt-6-astra` with `low`
+- marketing-docs: `gpt-5.6-luna` with `max`
 
-Use the configured role default for a well-scoped assignment. Reasoning labels are relative to each model; do not assume an exact quality or cost equivalence between Astra `low` (Light) and Sol `high`. Preserve explicit user model/effort choices. Increase effort for concrete unresolved ambiguity, difficult interactions, or inadequate results, explaining why; do not choose `xhigh` merely because a task is delegated or a role previously used it. Use only supported overrides exposed by the current runtime, within the effort cap above. If an override is unavailable, report that limitation and continue with the available configuration when viable; do not rewrite installed settings or claim an active worker changed models. Higher effort does not replace independent review or verification.
+Use the configured role default for a well-scoped assignment. Reasoning labels are relative to each model; do not assume exact quality, cost, or depth equivalence between different model/effort pairs. Preserve explicit user model/effort choices. The packaged Sol `xhigh` selections are intentional defaults for sustained professional work; do not lower them merely because a task is delegated. Increase or decrease effort only for a concrete task need or observed result, explaining an override. Use only supported overrides exposed by the current runtime, within the effort cap above. If an override is unavailable, report that limitation and continue with the available configuration when viable; do not rewrite installed settings or claim an active worker changed models. Higher effort does not replace independent review or verification.
 
 Future OpenRouter targets are documented but disabled in the affected agent TOML files until Codex correctly honors mixed-provider subagent configuration.
 
@@ -51,23 +51,23 @@ Each named agent has a matching skill: `coding`, `tech-ops`, `software-architect
 
 ## Delegation Gate
 
-Before substantive work, classify the task as either:
+Before substantive work, establish the requested outcome, acceptance criteria, explicit replacement or removal requirements, dependency order, current milestone, and the checkpoint that permits downstream work. Then classify the task as either:
 
 - root-only
 - delegated
 
-Root-only is appropriate only for genuinely small, localized work that does not materially benefit from independent exploration, implementation, research, documentation, or review.
+Root-only is appropriate for cohesive work the root can complete safely without losing a material specialist or independence benefit. Multiple files, repository investigation, or task size alone do not require delegation.
 
-Delegate when at least one is true:
+Delegate a bounded assignment when its result is required by the current milestone and at least one is true:
 
-- the task spans multiple files, modules, services, or components
-- repository investigation is needed before implementation
-- two or more independent workstreams exist
-- architecture and implementation should use separate context
-- external or version-specific facts require research
-- an independent review is materially useful
+- two or more independently executable workstreams exist now
+- a real architecture decision benefits from separate context
+- external or version-specific facts require focused research
+- independent review is required or materially useful
 - the user explicitly asks for agents, delegation, orchestration, or subagents
-- different documentation audiences require separate treatment
+- specialized visual, 3D, infrastructure, documentation, or other domain work is required
+
+Use available concurrency for work that is independent, immediately useful, and ownership-safe. Five or six active specialists can be healthy; a configured thread ceiling is capacity, not a target or a reason to create work. Do not start a downstream consumer, integration, documentation, tracker, or acceptance stage before its prerequisite checkpoint is complete. Keep one writer per subsystem, and do not let the root edit a worker-owned subsystem concurrently. Reuse an existing suitable agent for follow-up work instead of creating an equivalent replacement.
 
 When delegation is required, actually spawn the named subagent. Do not merely simulate delegation in the root thread.
 
@@ -215,15 +215,15 @@ For substantial implementation work, use only the stages that materially apply:
 8. testing handoff for every implemented change, owned by the implementing specialist and checked by the coordinator
 9. commit, push, and ready-for-review PR for repository implementation work, owned by the coordinator unless explicitly assigned
 
-Dependent stages must run in order.
+Dependent stages must run in order. Record the checkpoint that closes each prerequisite, and do not start downstream work merely because capacity is available.
 
-Independent research or documentation preparation may run in parallel when it does not depend on unfinished implementation details.
+Independent research or documentation preparation may run in parallel when it is required by the current milestone and does not depend on unfinished implementation details. Batch final documentation, changelog, tracker closeout, and broad acceptance work at stable milestone boundaries instead of refreshing them after every intermediate edit.
 
 Do not invoke every specialist mechanically.
 
 The testing handoff also applies to small root-only changes, direct specialist invocation, fixes, assets, infrastructure, and documentation edits. Follow [testing instructions and handoff](references/testing-handoff.md). The implementer supplies concrete steps and expected results; use `technical-docs` to assemble a larger developer/operator guide or `user-docs` for end-user acceptance steps when that adds value. Finalize the instructions after the last fixes and documentation updates, and include them or a direct artifact link in the final delivery. This is a required deliverable, not a requirement to spawn another agent. Review-only work retains its read-only scope.
 
-For implementation tasks in a Git repository, commit, push, and a ready-for-review PR are part of the default definition of done. Follow [Git delivery and definition of done](references/git-delivery.md); do not require a separate user prompt for these ordinary delivery steps. The coordinator delivers the integrated result once; delegated specialists hand back their changes unless explicitly assigned Git delivery ownership. Explicit local-only/no-Git/no-remote restrictions and review, research, planning, or report-only scope take precedence. This does not include merge, deployment, release publication, or external tracker completion.
+For implementation tasks in a Git repository, commit, push, and a ready-for-review PR are part of the default definition of done. Follow [Git delivery and definition of done](references/git-delivery.md). At task start, state whether this default applies; when a higher-priority instruction requires Git mutations in an approved task-specific plan, include task-branch creation or reuse, the scoped commit, the explicit push destination, and the ready-for-review PR in that plan. After the user approves the plan or explicitly requests those delivery steps, do not ask again. If a required approval was omitted, ask once for the missing boundary instead of silently stopping at local changes. The coordinator delivers the integrated result once; delegated specialists hand back their changes unless explicitly assigned Git delivery ownership. Explicit local-only/no-Git/no-remote restrictions and review, research, planning, or report-only scope take precedence. This does not include merge, deployment, release publication, or external tracker completion.
 
 When adversarial review is required, run it independently after normal review and preserve its original findings before reconciliation. Re-review corrections affecting the qualifying feature or integration as needed; do not restart adversarial review for later documentation/changelog edits, unrelated routine fixes, or minor changes. A previously completed adversarial stage does not make it mandatory for every subsequent change.
 
@@ -249,7 +249,7 @@ Every spawned task should include:
 - Progress contract: useful milestones, authorized checkpoint location or message channel, current operation, remaining scope, and explicit user deadlines/budgets if any
 - Recovery context: ownership, snapshot/task/job IDs when available, completed work to preserve, and side effects that must not be repeated blindly
 
-Prefer narrow tasks that can finish independently.
+Prefer narrow tasks that can finish independently. Before spawning, identify the current critical-path milestone, why this result is needed now, and the prerequisite checkpoint already satisfied. Track both active agents and cumulative assignments; neither a free slot nor a completed agent is by itself a reason to create another task.
 
 Do not send multiple writing agents to edit the same file at the same time unless the root explicitly coordinates ownership.
 
@@ -268,6 +268,8 @@ For all delegated work and long-running root-owned operations, read and apply [t
 A wait timeout means check progress, not cancel, finalize, restart, or mark failed. Quiet execution and unanswered checkpoint requests do not prove a stall. Use available evidence to distinguish running, progress unknown, blocked on input, execution failed, cancelled, partial, and completed states. User stop requests, explicit budgets/deadlines, and concrete safety concerns still apply.
 
 Request checkpoints at useful milestones without interrupting healthy work. Preserve partial results within existing permissions, inspect side-effect outcomes before retry, and verify ownership has ended before launching a replacement writer. Resume existing work or assign only remaining scope when recovery is necessary. Do not impose fixed heartbeat requirements or infer execution deadlines from repeated waits.
+
+When the user questions agent count, sequencing, scope, looping, or progress, freeze new spawning, inspect active and cumulative assignments, answer the concern, and restate the critical path before continuing. Do not interrupt healthy existing work unless the user asks or another authorized stopping reason applies.
 
 ## Diagrams and generated pull requests
 

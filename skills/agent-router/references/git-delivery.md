@@ -2,6 +2,8 @@
 
 For implementation work in a Git repository, AgentKit's default deliverable includes a scoped commit, a push to the intended delivery remote, and a ready-for-review pull request. A request to implement a feature, fix, configuration change, repository asset, or documentation update using this workflow includes those delivery steps; do not stop after local edits or ask for separate confirmation of each ordinary Git step.
 
+At task start, decide whether this default applies and carry the delivery steps into the task-specific plan. When a higher-priority instruction requires Git mutations to be named in an approved plan, explicitly include task-branch creation or reuse, the scoped commit, the source-to-destination push, and creation or update of the ready-for-review PR. After the user approves that plan or explicitly requests those delivery steps, proceed without asking again. If an approved plan covered only local edits or omitted Git delivery under a rule that requires it to be named, obtain that one missing approval before mutating repository state; do not silently drop the delivery stage or call the local result done.
+
 Explicit task restrictions take precedence, including local-only work, no commit/push/PR, no remote mutations, and a request for a patch or proposal only. Review-only, research, architecture/planning-only, and release-readiness assessments keep their existing report-only scope. Non-Git artifact work does not require creating a repository or remote. This default does not authorize merging or approving a PR, deploying, publishing a release or external content, marking a tracker item Done, force-pushing, or discarding unrelated work.
 
 ## One delivery owner

@@ -85,7 +85,7 @@ The workflow asks for reviews that fit the assignment. **Adversarial review—a 
 
 ## Definition of done
 
-When you ask AgentKit to implement a repository change, the normal workflow continues through the applicable reviews, checks, and testing instructions, then commits the scoped changes, pushes the task branch, and creates or updates a **ready-for-review PR**. You do not need to ask separately for each Git step. The coordinator owns delivery after integrating specialist work; directly invoked specialists own it when there is no coordinator. See [Git delivery and definition of done](skills/agent-router/references/git-delivery.md).
+When you ask AgentKit to implement a repository change, the normal workflow continues through the applicable reviews, checks, and testing instructions, then commits the scoped changes, pushes the task branch, and creates or updates a **ready-for-review PR**. You do not need to ask separately for each Git step. If higher-priority project instructions require Git mutations to appear in an approved task-specific plan, the coordinator includes branch setup or reuse, commit, push, and PR creation in the initial plan; after you approve that plan, it proceeds without asking again. The coordinator owns delivery after integrating specialist work; directly invoked specialists own it when there is no coordinator. See [Git delivery and definition of done](skills/agent-router/references/git-delivery.md).
 
 Instructions such as "local changes only," "do not commit," or "do not push" override this default. Review-only, research, planning, and release-readiness tasks keep their report scope, and non-Git artifact work does not require a new repository. Delivery does not include merging, deployment, release publication, or marking external work items Done. If a required delivery step is blocked, AgentKit reports what completed and what remains; successful local edits alone do not count as completed Git delivery.
 
@@ -178,24 +178,30 @@ The included specialists use these settings. The *reasoning* column is the model
 
 | Specialist | Model | Reasoning |
 | --- | --- | --- |
-| Coding | GPT-5.6 Sol | high |
-| Tech ops / infrastructure as code | GPT-5.6 Sol | high |
+| Coding | GPT-5.6 Sol | xhigh |
+| Tech ops / infrastructure as code | GPT-5.6 Sol | xhigh |
 | Software architecture | GPT-6 Astra | medium |
-| Graphic design and art | GPT-6 Astra | low |
+| Graphic design and art | GPT-6 Astra | medium |
 | 3D modeling | GPT-6 Astra | high |
-| Code review | GPT-6 Astra | medium |
-| Adversarial review | GPT-6 Astra | high |
-| Security review (opt-in) | GPT-6 Astra | medium |
-| Research | GPT-5.6 Luna | high |
-| Technical documentation | GPT-5.6 Luna | high |
+| Code review | GPT-5.6 Sol | xhigh |
+| Adversarial review | GPT-6 Astra | low |
+| Security review (opt-in) | GPT-5.6 Sol | xhigh |
+| Research | GPT-6 Astra | low |
+| Technical documentation | GPT-5.6 Luna | max |
 | User documentation | GPT-6 Astra | low |
-| Marketing documentation | GPT-6 Astra | low |
+| Marketing documentation | GPT-5.6 Luna | max |
 
-Your main assistant keeps the model and reasoning in your existing Codex settings. The optional example uses GPT-6 Astra with `low` reasoning and GPT-5.6 Sol with `high` as the default for additional assistants. Updating AgentKit preserves an existing `config.toml`, so changing the example does not change your current main assistant. The workflow uses the default service tier and does not enable Fast mode. It limits reasoning to `xhigh`, except for Luna, which may use `max`.
+Your main assistant keeps the model and reasoning in your existing Codex settings. The optional example uses GPT-5.6 Sol with `xhigh` reasoning for the root and as the default for additional assistants, with an eight-thread session ceiling. Updating AgentKit preserves an existing `config.toml`, so changing the example does not change your current main assistant. The workflow uses the default service tier and does not enable Fast mode. It limits reasoning to `xhigh`, except for Luna, which may use `max`.
 
-These are starting defaults, with more effort reserved for tasks that need it. Routine coordination, visual direction, and public-facing writing start at Astra `low`; architecture and normal/security reviews start at `medium`; 3D modeling and adversarial review keep `high` for difficult asset work and deeper failure analysis. Sol remains the implementation model, and Luna remains the focused research and technical-writing model. Increase effort when ambiguity, difficult interactions, or observed results justify it, within the runtime's supported settings and the package's limits. Explicit user model and reasoning choices take precedence.
+These are starting defaults for this kit, not universal model recommendations. Sol `xhigh` handles implementation, infrastructure, normal review, and opt-in local security review. Astra remains the bounded architecture, research, visual, 3D, adversarial, and user-documentation model at role-specific effort. Luna `max` handles technical and marketing documentation. Preserve explicit user model and reasoning choices, and override a role only for a concrete task need or observed result within the runtime's supported settings and the package's limits.
 
-OpenAI calls `low` **Light** in the app and recommends using the lowest effort that produces the needed result. The official pages consulted do not establish an exact Astra Light = Sol High equivalence. Treat these selections as defaults to evaluate against familiar work, not as a benchmarked quality or savings guarantee. See [OpenAI's reasoning guidance](https://learn.chatgpt.com/docs/models#pick-a-reasoning-effort) and [Astra's supported effort levels](https://developers.openai.com/api/docs/models/gpt-6-astra). Compare completion quality, missed defects, unnecessary findings, time, and usage on representative tasks before increasing defaults across all roles.
+OpenAI calls `low` **Light** in the app. The official pages consulted do not establish exact quality, cost, or depth equivalence between different model/effort pairs. Treat these selections as defaults to evaluate against familiar work, not as a benchmarked guarantee. See [OpenAI's reasoning guidance](https://learn.chatgpt.com/docs/models#pick-a-reasoning-effort) and [the current model catalog](https://developers.openai.com/api/docs/models). Compare completion quality, missed defects, unnecessary findings, time, and usage on representative tasks. In particular, evaluate Astra `low` adversarial review against a known difficult interaction and Luna `max` marketing copy against publication-quality requirements.
+
+### Orchestration and convergence
+
+The eight-thread example leaves room for five or six specialists to work concurrently when their assignments are independent, immediately useful to the current milestone, and ownership-safe. The ceiling is capacity, not a target. Before delegation, the coordinator establishes acceptance criteria, replacement or removal requirements, dependency order, the current milestone, and its prerequisite checkpoint. Downstream consumers, final documentation, tracker closeout, and broad acceptance work wait for that checkpoint.
+
+Coordinators track active and cumulative assignments, reuse suitable agents for follow-up work, and keep one writer per subsystem. When the user questions agent count, sequencing, scope, looping, or progress, the coordinator freezes new spawning, reports current ownership and completed deliverables, and restates the corrected critical path before continuing. Loop detection is based on repeated or misordered work rather than automatic token, elapsed-time, compaction, or agent-count cutoffs. Review normally uses one independent pass, one correction pass, and one focused re-review; further equivalent cycles require a concrete remaining defect or changed evidence.
 
 ### Image generation for graphic design
 
