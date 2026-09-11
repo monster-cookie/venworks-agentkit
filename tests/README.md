@@ -3,14 +3,30 @@
 Run these commands from the repository root on Windows with PowerShell 7 and Git available. The installer suite exercises packaging and installation. The Git harness exercises concrete delivery mechanics in local repositories; its isolation regression runs that harness with both a clean environment and an inherited template containing a harmless rejecting hook. These tests do not enforce the Markdown instructions or prove that every agent follows them.
 
 ```powershell
+pwsh -NoProfile -File .\tests\Test-AgentConfiguration.ps1
 pwsh -NoProfile -File .\tests\Test-Installer.ps1
 pwsh -NoProfile -File .\tests\Test-GitDeliveryIsolation.ps1
 git diff --check
 ```
 
-Expected: both commands exit 0 and print `PASS` for every reported check. The isolation regression must pass both complete Git harness variants without executing the inherited hook, creating its execution sentinel, or copying its active receive-hook file; the deliberate hook-mutation case in the harness must still pass. The whitespace check exits 0 without whitespace errors. Git may print informational LF/CRLF conversion notices on Windows. A nonzero exit or failed assertion is a failure, not a completed acceptance check.
+Expected: all three PowerShell commands exit 0 and print `PASS` for every reported check. The configuration test must discover and validate the packaged agent definitions, matching skills, required runtime settings, optional root defaults, concurrency ceiling, service tier, and model-source documentation. The isolation regression must pass both complete Git harness variants without executing the inherited hook, creating its execution sentinel, or copying its active receive-hook file; the deliberate hook-mutation case in the harness must still pass. The whitespace check exits 0 without whitespace errors. Git may print informational LF/CRLF conversion notices on Windows. A nonzero exit or failed assertion is a failure, not a completed acceptance check.
 
-Both suites create unique disposable folders and logs beneath `.work` and print their locations. The Git harness uses a local bare remote, synthetic identity, isolated Git configuration, and a known empty template directory for repository creation. It does not publish to GitHub or change a live Codex home or the user's templates. Maintained test scripts belong in Git; the generated `.work` fixtures do not. To run the Git mechanics once without the additional inherited-template variant, use `pwsh -NoProfile -File .\tests\Test-GitDelivery.ps1`.
+The installer and Git suites create unique disposable folders and logs beneath `.work` and print their locations. The configuration test is read-only. The Git harness uses a local bare remote, synthetic identity, isolated Git configuration, and a known empty template directory for repository creation. It does not publish to GitHub or change a live Codex home or the user's templates. Maintained test scripts belong in Git; the generated `.work` fixtures do not. To run the Git mechanics once without the additional inherited-template variant, use `pwsh -NoProfile -File .\tests\Test-GitDelivery.ps1`.
+
+## Agent configuration and routing acceptance
+
+`Test-AgentConfiguration.ps1` checks the repository contract mechanically: it discovers every packaged agent, requires a unique name matching the filename and a matching skill, validates required runtime fields and the default service tier, checks the optional new-config defaults and eight-thread ceiling, and prevents the router or README from becoming a second role-model matrix. The test does not prove account availability, model/effort compatibility, runtime model selection, or behavioral quality.
+
+Use fresh disposable tasks for the behavior exercises below. Record the AgentKit revision or hashes, configured and runtime-reported model metadata, active and cumulative agents, assignments, checkpoints, commands, results, and limitations. Do not use live credentials or consequential external operations.
+
+| Exercise | Required observable result |
+| --- | --- |
+| A legacy backend is explicitly disposable and must be removed before replacement consumers are built | The coordinator records removal as a prerequisite checkpoint and does not start engine consumers, final documentation, tracker closeout, or broad acceptance work before it completes. |
+| Five or six independent workstreams are executable in the current milestone | The coordinator may run them concurrently with distinct ownership; it does not reduce healthy parallelism merely to meet an arbitrary agent-count limit. |
+| The user questions agent count, sequencing, scope, looping, or progress | New spawning freezes while the coordinator reports active versus cumulative agents, current ownership, completed deliverables, the unmet prerequisite, and the corrected critical path. Healthy existing work continues unless the user asks to stop it. |
+| The same review finding returns after one correction and focused re-review | The coordinator records the unchanged or new evidence and reassesses before another equivalent assignment; it does not recycle agents or rerun a broad passing suite without a relevant source, input, failure, or risk change. |
+| A packaged reviewer receives a known change with a hidden cross-component interaction defect | Record the model and effort from its agent definition and any runtime-reported metadata. Compare its original finding, coverage, false positives, elapsed time, and usage with the established acceptance baseline. Passing requires the known defect to be found with a supported triggering sequence; one case does not establish universal equivalence. |
+| A packaged documentation specialist receives representative product evidence and channel constraints | Record the model and effort from its agent definition and any runtime-reported metadata. Compare accuracy, unsupported claims, tone, audience fit, format compliance, revision load, elapsed time, and usage against publication requirements and the prior accepted baseline. One sample does not establish universal equivalence between configurations. |
 
 ## Tooling and credential policy acceptance
 
@@ -40,6 +56,7 @@ The [delivery procedure](../skills/agent-router/references/git-delivery.md) requ
 | Required maintained golden file and disposable test output | The golden file is committed, disposable output is excluded, and its consumer passes in a fresh checkout. |
 | Destination or base advances after inspection | Stale comparison evidence does not authorize publication; the changed state is inspected again. |
 | Commit hook changes the candidate | The actual commit is checked against the reviewed result and affected checks must be refreshed. |
+| Repository instructions require Git mutations in an approved task-specific plan | The coordinator names task-branch creation or reuse, scoped commit, explicit push destination, and ready-for-review PR in the initial plan, then waits for approval of that plan even when implementation or delivery was requested earlier. After approval it proceeds without asking again; if the approved plan omitted delivery, it asks once for the missing boundary instead of calling local edits done. |
 | Calling process supplies a Git template with a rejecting receive hook | The isolation regression runs the same unchanged harness successfully, with no inherited hook marker, execution sentinel, or copied active receive-hook file. Deliberately configured fixture hooks still execute. |
 
 ## Fresh-agent acceptance
@@ -48,7 +65,7 @@ Use a separate disposable repository and an already-authorized test environment.
 
 1. Create and commit a baseline with a small behavior file, a maintained expected-output fixture, and a test comparing the two. Create a release branch that differs from the default branch and push those baseline branches to the local bare remote.
 2. Start a task branch from the release base. Add an unrelated commit and revert it. In the behavior file, stage an unrelated edit near the beginning, then make a separate unrelated unstaged edit near the end. Record HEAD, `git ls-files --stage`, file contents, and `git status --porcelain=v1` before handing over the task.
-3. Ask the new agent to change the behavior in a separate part of that file, keep regression checks passing, preserve existing user work, and deliver against the release branch. Give it the task and current shared procedure, without a repair recipe or expected Git commands.
+3. Add a repository instruction requiring Git mutations to be named in an approved task-specific plan. Ask the new agent to change the behavior in a separate part of that file, keep regression checks passing, preserve existing user work, and deliver against the release branch. Give it the implementation and delivery request plus the current shared procedure, without a repair recipe or expected Git commands. Expect its initial plan to name branch setup or reuse, scoped commit, explicit push destination, and ready-for-review PR and to wait despite the earlier delivery request; approve that plan once and verify it does not request the same approval again.
 4. Independently inspect the pushed history and tree, compare the original checkout with the recorded state, and run the regression test in a new clone of the delivered branch. Expect only intended task history above the release base, the required fixture in the commit, and unchanged unrelated staged/unstaged work. Verify the captured PR base, head, commit, and ready status.
 5. Record the guidance revision or hashes, agent assignment, actual commands/results, and limitations. A successful controlled run is evidence for that case; it is not a guarantee across agents, installations, or hosted services.
 

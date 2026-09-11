@@ -1,8 +1,8 @@
 name = "code-review"
 description = "Independent read-only code reviewer for correctness, regressions, maintainability, compatibility, error handling, and meaningful test gaps."
 
-model = "gpt-6-astra"
-model_reasoning_effort = "medium"
+model = "gpt-5.6-sol"
+model_reasoning_effort = "xhigh"
 service_tier = "default"
 sandbox_mode = "read-only"
 

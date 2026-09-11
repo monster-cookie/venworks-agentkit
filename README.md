@@ -59,7 +59,7 @@ pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1 -InitializeConfig -WhatIf
 pwsh -NoProfile -File .\tools\Install-CodexAgents.ps1 -InitializeConfig
 ```
 
-Read the example first. It includes the suggested models, support for multiple assistants, memory and context options, and a limit of 12 assistants running at once. It contains no account credentials or service connections. If you already have a configuration file, these commands leave it unchanged.
+Read the example first. It includes the suggested models, support for multiple assistants, memory and context options, and an eight-thread session ceiling. It contains no account credentials or service connections. If you already have a configuration file, these commands leave it unchanged.
 
 ## Give AgentKit a task
 
@@ -85,7 +85,7 @@ The workflow asks for reviews that fit the assignment. **Adversarial review—a 
 
 ## Definition of done
 
-When you ask AgentKit to implement a repository change, the normal workflow continues through the applicable reviews, checks, and testing instructions, then commits the scoped changes, pushes the task branch, and creates or updates a **ready-for-review PR**. You do not need to ask separately for each Git step. The coordinator owns delivery after integrating specialist work; directly invoked specialists own it when there is no coordinator. See [Git delivery and definition of done](skills/agent-router/references/git-delivery.md).
+When you ask AgentKit to implement a repository change, the normal workflow continues through the applicable reviews, checks, and testing instructions, then commits the scoped changes, pushes the task branch, and creates or updates a **ready-for-review PR**. You do not need to ask separately for each Git step unless a higher-priority project instruction requires Git mutations to appear in an approved task-specific plan. In that case, the coordinator includes branch setup or reuse, commit, push, and PR creation in the plan and waits for you to approve it; an earlier implementation or delivery request does not replace that approval. Once you approve the task-specific plan, it proceeds without asking again. The coordinator owns delivery after integrating specialist work; directly invoked specialists own it when there is no coordinator. See [Git delivery and definition of done](skills/agent-router/references/git-delivery.md).
 
 Instructions such as "local changes only," "do not commit," or "do not push" override this default. Review-only, research, planning, and release-readiness tasks keep their report scope, and non-Git artifact work does not require a new repository. Delivery does not include merging, deployment, release publication, or marking external work items Done. If a required delivery step is blocked, AgentKit reports what completed and what remains; successful local edits alone do not count as completed Git delivery.
 
@@ -174,32 +174,21 @@ The installer tries to undo its changes if a write fails. It cannot do that afte
 
 ## Model settings
 
-The included specialists use these settings. The *reasoning* column is the model's configured effort level.
+Each packaged specialist's runtime defaults live in its matching file under [`agents/`](agents). Those agent definitions are the authoritative source for role-specific `model`, `model_reasoning_effort`, `service_tier`, and sandbox settings. The router decides when to use a role; it does not maintain a second model matrix. This avoids conflicts when a role's configuration changes.
 
-| Specialist | Model | Reasoning |
-| --- | --- | --- |
-| Coding | GPT-5.6 Sol | high |
-| Tech ops / infrastructure as code | GPT-5.6 Sol | high |
-| Software architecture | GPT-6 Astra | medium |
-| Graphic design and art | GPT-6 Astra | low |
-| 3D modeling | GPT-6 Astra | high |
-| Code review | GPT-6 Astra | medium |
-| Adversarial review | GPT-6 Astra | high |
-| Security review (opt-in) | GPT-6 Astra | medium |
-| Research | GPT-5.6 Luna | high |
-| Technical documentation | GPT-5.6 Luna | high |
-| User documentation | GPT-6 Astra | low |
-| Marketing documentation | GPT-6 Astra | low |
+Your main assistant keeps the model and reasoning in your existing Codex settings. The optional [example settings](Config-Settings.toml.example) define root and delegated-work fallbacks with an eight-thread session ceiling. Updating AgentKit preserves an existing `config.toml`, so changing the example does not change your current main assistant.
 
-Your main assistant keeps the model and reasoning in your existing Codex settings. The optional example uses GPT-6 Astra with `low` reasoning and GPT-5.6 Sol with `high` as the default for additional assistants. Updating AgentKit preserves an existing `config.toml`, so changing the example does not change your current main assistant. The workflow uses the default service tier and does not enable Fast mode. It limits reasoning to `xhigh`, except for Luna, which may use `max`.
+Treat the packaged values as starting defaults to evaluate against familiar work, not as benchmarked guarantees. Preserve explicit user model and reasoning choices, and override a role only for a concrete task need or observed result supported by the current runtime. Compare completion quality, missed defects, unnecessary findings, time, and usage on representative tasks. See [OpenAI's subagent configuration guidance](https://developers.openai.com/codex/subagents/) and [the current model catalog](https://developers.openai.com/api/docs/models).
 
-These are starting defaults, with more effort reserved for tasks that need it. Routine coordination, visual direction, and public-facing writing start at Astra `low`; architecture and normal/security reviews start at `medium`; 3D modeling and adversarial review keep `high` for difficult asset work and deeper failure analysis. Sol remains the implementation model, and Luna remains the focused research and technical-writing model. Increase effort when ambiguity, difficult interactions, or observed results justify it, within the runtime's supported settings and the package's limits. Explicit user model and reasoning choices take precedence.
+### Orchestration and convergence
 
-OpenAI calls `low` **Light** in the app and recommends using the lowest effort that produces the needed result. The official pages consulted do not establish an exact Astra Light = Sol High equivalence. Treat these selections as defaults to evaluate against familiar work, not as a benchmarked quality or savings guarantee. See [OpenAI's reasoning guidance](https://learn.chatgpt.com/docs/models#pick-a-reasoning-effort) and [Astra's supported effort levels](https://developers.openai.com/api/docs/models/gpt-6-astra). Compare completion quality, missed defects, unnecessary findings, time, and usage on representative tasks before increasing defaults across all roles.
+The eight-thread example leaves room for five or six specialists to work concurrently when their assignments are independent, immediately useful to the current milestone, and ownership-safe. The ceiling is capacity, not a target. Before delegation, the coordinator establishes acceptance criteria, replacement or removal requirements, dependency order, the current milestone, and its prerequisite checkpoint. Downstream consumers, final documentation, tracker closeout, and broad acceptance work wait for that checkpoint.
+
+Coordinators track active and cumulative assignments, reuse suitable agents for follow-up work, and keep one writer per subsystem. When the user questions agent count, sequencing, scope, looping, or progress, the coordinator freezes new spawning, reports current ownership and completed deliverables, and restates the corrected critical path before continuing. Loop detection is based on repeated or misordered work rather than automatic token, elapsed-time, compaction, or agent-count cutoffs. Review normally uses one independent pass, one correction pass, and one focused re-review; further equivalent cycles require a concrete remaining defect or changed evidence.
 
 ### Image generation for graphic design
 
-The graphic-design specialist's Astra setting controls planning, tool use, and review. The model that renders an image is a separate tool setting. OpenAI's September 8, 2026 release adds [**GPT Image 2.5 Flare**](https://developers.openai.com/api/docs/models/gpt-image-2.5-flare) for fast everyday generation and [**GPT Image 2.5 Sunburst**](https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst) for precise editing. These are the preferred choices when an authorized image tool exposes model selection and its endpoint, tool/SDK options, and configured account support the requested model. AgentKit checks current official guidance and available capability evidence; a public model listing alone does not prove account or tool access. See the [release notes](https://developers.openai.com/api/docs/changelog) and [image-generation guide](https://developers.openai.com/api/docs/guides/image-generation).
+The graphic-design specialist controls planning, tool use, and review. The model that renders an image is a separate tool setting. OpenAI's September 8, 2026 release adds [**GPT Image 2.5 Flare**](https://developers.openai.com/api/docs/models/gpt-image-2.5-flare) for fast everyday generation and [**GPT Image 2.5 Sunburst**](https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst) for precise editing. These are the preferred choices when an authorized image tool exposes model selection and its endpoint, tool/SDK options, and configured account support the requested model. AgentKit checks current official guidance and available capability evidence; a public model listing alone does not prove account or tool access. See the [release notes](https://developers.openai.com/api/docs/changelog) and [image-generation guide](https://developers.openai.com/api/docs/guides/image-generation).
 
 The graphic-design subagent can use the built-in image-generation tool when that tool is available to it. The interface checked for this update exposes no model selector or backend identity, so AgentKit cannot force or confirm Image 2.5 through that interface. It keeps the available built-in path and reports this limitation when a particular image model is requested. Unsupported or unverified selections are reported without silently substituting a model or claiming a backend ran. Explicit API model selection needs an authorized, configured API workflow; installing AgentKit does not set up that access or update installed wrappers. Existing SVG and other editable vector assets still use the appropriate native tools.
 
