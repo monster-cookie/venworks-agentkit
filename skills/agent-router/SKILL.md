@@ -7,8 +7,6 @@ description: Route non-trivial Codex work to specialized subagents for implement
 
 The user's explicit instructions take precedence over this skill.
 
-Never select reasoning above `xhigh`, except `gpt-5.6-luna` may use `max`. Never enable Fast mode. Keep the default service tier, including for delegated work.
-
 ## Tooling and credential policies
 
 Before selecting project tools or using an authenticated service, follow [tooling and credential policies](references/tooling-and-credentials.md). Resolve optional configured shared and repository-root policies for this role, target, and operation; verify the required identity through the actual consuming tool. Missing policies retain existing workflow behavior. Existing but invalid or conflicting policies block affected operations, not unrelated work. Tool access and credentials do not independently authorize mutations. Direct invocation follows the same discovery rules as delegated work.
@@ -25,23 +23,7 @@ The root should classify the work, delegate bounded specialist tasks, wait for r
 
 Use this workflow across software, infrastructure, creative, and documentation projects. Establish the project's domain, toolchain, target environments, and conventions from its instructions and actual files. Do not assume a game engine, vendor, cloud provider, repository layout, or deployment target. Load platform-specific guidance only when that platform is part of the requested work.
 
-Packaged starting defaults (the root setting is only in the optional example config; preserve the user's existing root model and effort):
-
-- root/orchestrator: `gpt-5.6-sol` with `xhigh`
-- coding: `gpt-5.6-sol` with `xhigh`
-- tech-ops: `gpt-5.6-sol` with `xhigh`
-- software-architecture: `gpt-6-astra` with `medium`
-- graphic-design: `gpt-6-astra` with `medium`
-- 3d-modeling: `gpt-6-astra` with `high`
-- code-review: `gpt-5.6-sol` with `xhigh`
-- adversarial-review: `gpt-6-astra` with `low`
-- security-review: `gpt-5.6-sol` with `xhigh`
-- research: `gpt-6-astra` with `low`
-- technical-docs: `gpt-5.6-luna` with `max`
-- user-docs: `gpt-6-astra` with `low`
-- marketing-docs: `gpt-5.6-luna` with `max`
-
-Use the configured role default for a well-scoped assignment. Reasoning labels are relative to each model; do not assume exact quality, cost, or depth equivalence between different model/effort pairs. Preserve explicit user model/effort choices. The packaged Sol `xhigh` selections are intentional defaults for sustained professional work; do not lower them merely because a task is delegated. Increase or decrease effort only for a concrete task need or observed result, explaining an override. Use only supported overrides exposed by the current runtime, within the effort cap above. If an override is unavailable, report that limitation and continue with the available configuration when viable; do not rewrite installed settings or claim an active worker changed models. Higher effort does not replace independent review or verification.
+Each packaged agent definition owns that role's model, reasoning-effort, service-tier, and sandbox defaults. Treat the matching agent TOML as the authoritative source for those settings; do not duplicate them in routing instructions. Preserve explicit user and live runtime choices. Override a role's configured defaults only for a concrete task need or observed result, explain the reason, and use only settings supported by the current runtime. If an override is unavailable, report that limitation and continue with the available configuration when viable; do not rewrite installed settings or claim an active worker changed models. Model choice or higher effort does not replace independent review or verification.
 
 Future OpenRouter targets are documented but disabled in the affected agent TOML files until Codex correctly honors mixed-provider subagent configuration.
 
@@ -223,7 +205,7 @@ Do not invoke every specialist mechanically.
 
 The testing handoff also applies to small root-only changes, direct specialist invocation, fixes, assets, infrastructure, and documentation edits. Follow [testing instructions and handoff](references/testing-handoff.md). The implementer supplies concrete steps and expected results; use `technical-docs` to assemble a larger developer/operator guide or `user-docs` for end-user acceptance steps when that adds value. Finalize the instructions after the last fixes and documentation updates, and include them or a direct artifact link in the final delivery. This is a required deliverable, not a requirement to spawn another agent. Review-only work retains its read-only scope.
 
-For implementation tasks in a Git repository, commit, push, and a ready-for-review PR are part of the default definition of done. Follow [Git delivery and definition of done](references/git-delivery.md). At task start, state whether this default applies; when a higher-priority instruction requires Git mutations in an approved task-specific plan, include task-branch creation or reuse, the scoped commit, the explicit push destination, and the ready-for-review PR in that plan. After the user approves the plan or explicitly requests those delivery steps, do not ask again. If a required approval was omitted, ask once for the missing boundary instead of silently stopping at local changes. The coordinator delivers the integrated result once; delegated specialists hand back their changes unless explicitly assigned Git delivery ownership. Explicit local-only/no-Git/no-remote restrictions and review, research, planning, or report-only scope take precedence. This does not include merge, deployment, release publication, or external tracker completion.
+For implementation tasks in a Git repository, commit, push, and a ready-for-review PR are part of the default definition of done. Follow [Git delivery and definition of done](references/git-delivery.md). At task start, state whether this default applies. When a higher-priority instruction requires Git mutations in an approved task-specific plan, include task-branch creation or reuse, the scoped commit, the explicit push destination, and the ready-for-review PR in that plan, then wait for the user to approve that plan. An earlier implementation request or request for those delivery steps does not satisfy this plan-approval gate. Once the user approves the task-specific plan, do not ask again. When no such gate applies, follow the default or an explicit delivery request without an extra confirmation. If a required approval was omitted, ask once for the missing boundary instead of silently stopping at local changes. The coordinator delivers the integrated result once; delegated specialists hand back their changes unless explicitly assigned Git delivery ownership. Explicit local-only/no-Git/no-remote restrictions and review, research, planning, or report-only scope take precedence. This does not include merge, deployment, release publication, or external tracker completion.
 
 When adversarial review is required, run it independently after normal review and preserve its original findings before reconciliation. Re-review corrections affecting the qualifying feature or integration as needed; do not restart adversarial review for later documentation/changelog edits, unrelated routine fixes, or minor changes. A previously completed adversarial stage does not make it mandatory for every subsequent change.
 

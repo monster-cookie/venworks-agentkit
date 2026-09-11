@@ -46,65 +46,64 @@ function Get-UniqueIntegerSetting {
     return [int] $matches[0].Groups[1].Value
 }
 
-function Assert-UniqueLine {
+function Get-UniqueMultilineStringSetting {
     param(
         [Parameter(Mandatory)][string] $Text,
-        [Parameter(Mandatory)][string] $Line,
+        [Parameter(Mandatory)][string] $Name,
         [Parameter(Mandatory)][string] $Source
     )
 
-    $matches = [regex]::Matches($Text, '(?m)^' + [regex]::Escape($Line) + '\r?$')
-    Assert-True ($matches.Count -eq 1) "$Source must contain exactly one expected line: $Line"
-}
-
-$expectedAgents = [ordered]@{
-    '3d-modeling' = [pscustomobject]@{ Model = 'gpt-6-astra'; Effort = 'high'; Readme = '3D modeling' }
-    'adversarial-review' = [pscustomobject]@{ Model = 'gpt-6-astra'; Effort = 'low'; Readme = 'Adversarial review' }
-    'code-review' = [pscustomobject]@{ Model = 'gpt-5.6-sol'; Effort = 'xhigh'; Readme = 'Code review' }
-    'coding' = [pscustomobject]@{ Model = 'gpt-5.6-sol'; Effort = 'xhigh'; Readme = 'Coding' }
-    'graphic-design' = [pscustomobject]@{ Model = 'gpt-6-astra'; Effort = 'medium'; Readme = 'Graphic design and art' }
-    'marketing-docs' = [pscustomobject]@{ Model = 'gpt-5.6-luna'; Effort = 'max'; Readme = 'Marketing documentation' }
-    'research' = [pscustomobject]@{ Model = 'gpt-6-astra'; Effort = 'low'; Readme = 'Research' }
-    'security-review' = [pscustomobject]@{ Model = 'gpt-5.6-sol'; Effort = 'xhigh'; Readme = 'Security review (opt-in)' }
-    'software-architecture' = [pscustomobject]@{ Model = 'gpt-6-astra'; Effort = 'medium'; Readme = 'Software architecture' }
-    'tech-ops' = [pscustomobject]@{ Model = 'gpt-5.6-sol'; Effort = 'xhigh'; Readme = 'Tech ops / infrastructure as code' }
-    'technical-docs' = [pscustomobject]@{ Model = 'gpt-5.6-luna'; Effort = 'max'; Readme = 'Technical documentation' }
-    'user-docs' = [pscustomobject]@{ Model = 'gpt-6-astra'; Effort = 'low'; Readme = 'User documentation' }
-}
-
-$allowedEfforts = @{
-    'gpt-6-astra' = @('low', 'medium', 'high', 'xhigh')
-    'gpt-5.6-sol' = @('none', 'low', 'medium', 'high', 'xhigh')
-    'gpt-5.6-terra' = @('none', 'low', 'medium', 'high', 'xhigh')
-    'gpt-5.6-luna' = @('none', 'low', 'medium', 'high', 'xhigh', 'max')
+    $pattern = '(?ms)^[ \t]*' + [regex]::Escape($Name) + '[ \t]*=[ \t]*"""[ \t]*\r?\n(.*?)^[ \t]*"""[ \t]*(?:#.*)?\r?$'
+    $matches = [regex]::Matches($Text, $pattern)
+    Assert-True ($matches.Count -eq 1) "$Source must contain exactly one multiline '$Name' setting"
+    return $matches[0].Groups[1].Value
 }
 
 $agentDirectory = Join-Path $repositoryRoot 'agents'
-$expectedNames = @($expectedAgents.Keys | Sort-Object)
-$actualNames = @(Get-ChildItem -LiteralPath $agentDirectory -Filter '*.toml' -File | ForEach-Object BaseName | Sort-Object)
-Assert-True (($actualNames -join "`n") -ceq ($expectedNames -join "`n")) 'Packaged agent set does not match the expected model matrix'
+$agentFiles = @(Get-ChildItem -LiteralPath $agentDirectory -Filter '*.toml' -File | Sort-Object Name)
+Assert-True ($agentFiles.Count -gt 0) 'At least one packaged agent definition is required'
+$agentNames = @($agentFiles | ForEach-Object BaseName | Sort-Object)
+$skillNames = @(
+    Get-ChildItem -LiteralPath (Join-Path $repositoryRoot 'skills') -Directory |
+        Where-Object Name -cne 'agent-router' |
+        Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'SKILL.md') -PathType Leaf } |
+        ForEach-Object Name |
+        Sort-Object
+)
+Assert-True (($agentNames -join "`n") -ceq ($skillNames -join "`n")) 'Packaged agent definitions and specialist skills must have a one-to-one name match'
+$configuredNames = [System.Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+$validReasoningEfforts = @('none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max', 'ultra')
 
-foreach ($agentName in $expectedNames) {
-    $expected = $expectedAgents[$agentName]
-    $agentPath = Join-Path $agentDirectory "$agentName.toml"
+foreach ($agentFile in $agentFiles) {
+    $agentName = $agentFile.BaseName
+    $agentPath = $agentFile.FullName
     $skillPath = Join-Path $repositoryRoot "skills/$agentName/SKILL.md"
     Assert-True (Test-Path -LiteralPath $skillPath -PathType Leaf) "Agent '$agentName' has no matching skill"
 
     $agentText = [IO.File]::ReadAllText($agentPath)
     $configuredName = Get-UniqueStringSetting -Text $agentText -Name 'name' -Source $agentPath
+    $description = Get-UniqueStringSetting -Text $agentText -Name 'description' -Source $agentPath
     $model = Get-UniqueStringSetting -Text $agentText -Name 'model' -Source $agentPath
     $effort = Get-UniqueStringSetting -Text $agentText -Name 'model_reasoning_effort' -Source $agentPath
     $serviceTier = Get-UniqueStringSetting -Text $agentText -Name 'service_tier' -Source $agentPath
+    $sandboxMode = Get-UniqueStringSetting -Text $agentText -Name 'sandbox_mode' -Source $agentPath
+    $developerInstructions = Get-UniqueMultilineStringSetting -Text $agentText -Name 'developer_instructions' -Source $agentPath
 
     Assert-True ($configuredName -ceq $agentName) "Agent '$agentName' has mismatched name '$configuredName'"
-    Assert-True ($model -ceq $expected.Model) "Agent '$agentName' model '$model' does not match '$($expected.Model)'"
-    Assert-True ($effort -ceq $expected.Effort) "Agent '$agentName' effort '$effort' does not match '$($expected.Effort)'"
-    Assert-True ($allowedEfforts.ContainsKey($model)) "Agent '$agentName' uses unsupported packaged model '$model'"
-    Assert-True ($allowedEfforts[$model] -contains $effort) "Agent '$agentName' uses unsupported packaged effort '$effort' for '$model'"
-    Assert-True ($effort -cne 'max' -or $model -ceq 'gpt-5.6-luna') "Only GPT-5.6 Luna may use max effort"
+    Assert-True ($configuredNames.Add($configuredName)) "Agent name '$configuredName' is duplicated"
+    Assert-True (-not [string]::IsNullOrWhiteSpace($description)) "Agent '$agentName' must have a description"
+    Assert-True (-not [string]::IsNullOrWhiteSpace($model)) "Agent '$agentName' must select a model in its definition"
+    Assert-True (-not [string]::IsNullOrWhiteSpace($effort)) "Agent '$agentName' must select a reasoning effort in its definition"
+    Assert-True ($validReasoningEfforts -ccontains $effort) "Agent '$agentName' has unrecognized reasoning effort '$effort'"
     Assert-True ($serviceTier -ceq 'default') "Agent '$agentName' must use the default service tier"
+    Assert-True ($sandboxMode -cin @('read-only', 'workspace-write')) "Agent '$agentName' has unsupported sandbox mode '$sandboxMode'"
+    Assert-True (-not [string]::IsNullOrWhiteSpace($developerInstructions)) "Agent '$agentName' must have developer instructions"
+
+    $skillText = [IO.File]::ReadAllText($skillPath)
+    $skillNameMatches = [regex]::Matches($skillText, '(?m)^name:[ \t]*' + [regex]::Escape($agentName) + '[ \t]*\r?$')
+    Assert-True ($skillNameMatches.Count -eq 1) "Skill for agent '$agentName' must declare the same name"
 }
-$results.Add('Agent files, matching skills, model matrix, effort caps, and service tiers passed.')
+$results.Add('Discovered agent definitions, unique role names, matching skills, and required runtime fields passed.')
 
 $configPath = Join-Path $repositoryRoot 'Config-Settings.toml.example'
 $configText = [IO.File]::ReadAllText($configPath)
@@ -118,27 +117,23 @@ $results.Add('Example root, default subagent, concurrency, and service-tier sett
 
 $routerPath = Join-Path $repositoryRoot 'skills/agent-router/SKILL.md'
 $routerText = [IO.File]::ReadAllText($routerPath)
-Assert-UniqueLine -Text $routerText -Line '- root/orchestrator: `gpt-5.6-sol` with `xhigh`' -Source $routerPath
-foreach ($agentName in $expectedNames) {
-    $expected = $expectedAgents[$agentName]
-    Assert-UniqueLine -Text $routerText -Line "- ${agentName}: ``$($expected.Model)`` with ``$($expected.Effort)``" -Source $routerPath
-}
-$results.Add('Agent-router model table passed.')
+$modelIdPattern = '(?i)\bgpt-[a-z0-9][a-z0-9.-]*\b'
+Assert-True ($routerText -cnotmatch $modelIdPattern) 'Agent router must not duplicate concrete model IDs from agent definitions'
+Assert-True ($routerText -cnotmatch '(?m)^Packaged starting defaults') 'Agent router must not contain a packaged role-model matrix'
+Assert-True ($routerText -cmatch 'Treat the matching agent TOML as the authoritative source') 'Agent router must identify agent TOMLs as the runtime-setting source of truth'
+$results.Add('Agent-router model-source boundary passed.')
 
-$displayModels = @{
-    'gpt-6-astra' = 'GPT-6 Astra'
-    'gpt-5.6-sol' = 'GPT-5.6 Sol'
-    'gpt-5.6-terra' = 'GPT-5.6 Terra'
-    'gpt-5.6-luna' = 'GPT-5.6 Luna'
-}
 $readmePath = Join-Path $repositoryRoot 'README.md'
 $readmeText = [IO.File]::ReadAllText($readmePath)
-foreach ($agentName in $expectedNames) {
-    $expected = $expectedAgents[$agentName]
-    $line = "| $($expected.Readme) | $($displayModels[$expected.Model]) | $($expected.Effort) |"
-    Assert-UniqueLine -Text $readmeText -Line $line -Source $readmePath
-}
-$results.Add('README model table passed.')
+$modelSettingsMatch = [regex]::Match($readmeText, '(?ms)^## Model settings\r?\n(?<Body>.*?)(?=^### )')
+Assert-True $modelSettingsMatch.Success 'README must contain a Model settings section'
+$modelSettingsText = $modelSettingsMatch.Groups['Body'].Value
+Assert-True ($modelSettingsText -cnotmatch '(?m)^\|[ \t]*Specialist[ \t]*\|') 'README Model settings must not contain a duplicated specialist model table'
+Assert-True ($modelSettingsText -cnotmatch $modelIdPattern) 'README Model settings must not duplicate concrete model IDs from agent definitions'
+Assert-True ($modelSettingsText -cmatch 'agent definitions are the authoritative source') 'README must identify agent definitions as the runtime-setting source of truth'
+Assert-True ($readmeText -cmatch 'eight-thread session ceiling') 'README must document the configured eight-thread session ceiling'
+Assert-True ($readmeText -cnotmatch '(?i)\b(?:12|twelve)[ -]+(?:assistants?|threads?)\b') 'README must not retain the stale 12-assistant concurrency claim'
+$results.Add('README model-source and concurrency documentation passed.')
 
 foreach ($result in $results) {
     Write-Output "PASS: $result"
